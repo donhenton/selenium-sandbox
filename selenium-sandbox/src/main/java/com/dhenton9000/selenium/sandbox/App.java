@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * https://github.com/thucydides-webtests/thucydides/wiki
  * http://thomassundberg.wordpress.com/2011/10/18/testing-a-web-application-with-selenium-2/
  * http://mestachs.wordpress.com/2012/08/13/selenium-best-practices/
+ * http://www.wijsmullerbros.nl/content/wicket-selenium
  */
 public class App 
 {

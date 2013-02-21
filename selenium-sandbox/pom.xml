@@ -38,6 +38,13 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+      <groupId>com.dhenton9000.wicket.sandbox</groupId>
+      <artifactId>wicket-sandbox</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+     
+    </dependency>
+      
     
     <dependency>
         <groupId>org.seleniumhq.selenium</groupId>

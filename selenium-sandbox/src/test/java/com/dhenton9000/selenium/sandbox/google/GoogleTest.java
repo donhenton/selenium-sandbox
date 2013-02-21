@@ -27,6 +27,7 @@ public class GoogleTest {
 	public void openTheBrowser() {
 		page = PageFactory.initElements(new HtmlUnitDriver(), AnnotatedGoogleSearchPage.class);
 		page.open("http://google.co.nz/");
+             
 	}
 
 	@After
