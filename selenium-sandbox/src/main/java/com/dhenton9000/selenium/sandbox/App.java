@@ -7,7 +7,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Hello world!
- *
+ * http://www.codeproject.com/Articles/143430/Test-your-web-application-s-UI-with-JUnit-and-Sele
+ * http://wiki.openqa.org/display/SEL/Home
+ * http://docs.seleniumhq.org/docs/02_selenium_ide.jsp
+ * https://github.com/thucydides-webtests/thucydides/wiki
+ * http://thomassundberg.wordpress.com/2011/10/18/testing-a-web-application-with-selenium-2/
+ * http://mestachs.wordpress.com/2012/08/13/selenium-best-practices/
  */
 public class App 
 {
