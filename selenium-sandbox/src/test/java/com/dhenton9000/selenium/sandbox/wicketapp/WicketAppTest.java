@@ -43,18 +43,9 @@ public class WicketAppTest {
 
     @Test
     public void testRestaurantPage() {
-        //initial state 
-        // add button yes
-        // edit panel no
-        // pick panel yes
-
-        WebElement addPanel = driver.findElement(WicketBy.wicketPath("addPanel"));
-        assertTrue(addPanel.isDisplayed());
-        WebElement pickPanel = driver.findElement(WicketBy.wicketPath("pickPanel"));
-        assertTrue(pickPanel.isDisplayed());
-        assertTrue(isNotOnPage("editorPanel", driver));
+        checkPageIsInInitialState();
         WebElement addButton =
-                addPanel.findElement(WicketBy.wicketPath("addPanel_addForm_addButton"));
+                driver.findElement(WicketBy.wicketPath("addPanel_addForm_addButton"));
         //move to add state
         //editor Panel still present
         //add button gone
@@ -66,11 +57,8 @@ public class WicketAppTest {
         WebElement cancelButton = 
         driver.findElement(WicketBy.wicketPath("editorPanel_restaurantForm_cancelButton"));
         cancelButton.click();
-        addPanel = driver.findElement(WicketBy.wicketPath("addPanel"));
-        assertTrue(addPanel.isDisplayed());
-        pickPanel = driver.findElement(WicketBy.wicketPath("pickPanel"));
-        assertTrue(pickPanel.isDisplayed());
-        assertTrue(isNotOnPage("editorPanel", driver));
+        //this should be in add state
+        checkPageIsInInitialState();
 
     }
 
@@ -84,5 +72,19 @@ public class WicketAppTest {
 
 
         return isNotOnPage;
+    }
+
+    private void checkPageIsInInitialState() {
+        // initial state
+        // add button yes
+        // edit panel no
+        // pick panel yes
+        
+        WebElement addPanel = driver.findElement(WicketBy.wicketPath("addPanel"));
+        assertTrue(addPanel.isDisplayed());
+        WebElement pickPanel = driver.findElement(WicketBy.wicketPath("pickPanel"));
+        assertTrue(pickPanel.isDisplayed());
+        assertTrue(isNotOnPage("editorPanel", driver));
+         
     }
 }
