@@ -6,6 +6,9 @@ package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,8 +17,10 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.junit.Assert.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
  *
@@ -26,51 +31,87 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
     public static final String WEB_APP_HOME_PAGE = "http://localhost:9090/wicket-sandbox";
     public static final String MODAL_DIALOG_PAGE = WEB_APP_HOME_PAGE + "/ModalInputPage";
     public static final String MODAL_DIALOG_TITLE = "Enter Your Data";
+    public static final int NEW_AGE_VALUE = 768;
     private final Logger logger = LoggerFactory.getLogger(WicketAppTest.class);
-    private WebDriver driver;
+    private static WebDriver driver;
 
     @BeforeClass
     public static void beforeClass() {
-      //  System.setProperty("webdriver.chrome.driver", "/home/dhenton/selenium/driver/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/home/dhenton/selenium/driver/chromedriver");
+        driver = new FirefoxDriver();
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        driver.get(MODAL_DIALOG_PAGE);
     }
 
     @Before
     public void before() {
+    }
 
-        driver = new HtmlUnitDriver();
-        driver.get(MODAL_DIALOG_PAGE);
+    @AfterClass
+    public static void after() {
+
+        driver.close();
+        driver.quit();
+
 
 
     }
 
     @Test
-    public void testModalDialogIsNotPresentAtStart() {
-        assertFalse(isFramePresent("bozo", driver));
-        assertFalse(isFramePresent(MODAL_DIALOG_TITLE, driver));
-
-    }
-
-    @Test
-    public void testModalDialogIsPresent() throws InterruptedException {
+    public void testModalDialogIsPresentAndNothingHappensIfYouDismissTheDialog()
+            throws Exception {
         // String oldWindowHandle = driver.getWindowHandle();
         // logger.debug("old "+oldWindowHandle);
-       assertTrue(isNotOnPageViaWicketPath("chooserWindow_content",driver));
-        
+
+        WebElement ageField =
+                driver.findElement(WicketBy.wicketPath("form_age"));
+        assertEquals("25", ageField.getAttribute("value"));
+
+
+
+        assertTrue(isNotOnPageViaWicketPath("chooserWindow_content", driver));
+
         WebElement chooserLink =
                 driver.findElement(WicketBy.wicketPath("form_chooserLink"));
         chooserLink.click();
-        //Thread.sleep(3000);
-        //Set<String> ss = driver.getWindowHandles();
-        //for (String s: ss)
-        //{
 
-        //    logger.debug(s);
-        //}
-        //  assertTrue(isFramePresent(MODAL_DIALOG_TITLE, driver));
         WebElement chooserPopup =
                 driver.findElement(WicketBy.wicketPath("chooserWindow_content"));
         assertTrue(chooserPopup.isDisplayed());
+        // find the close button
+        WebElement closeButton = driver.findElement(By.className("w_close"));
+        closeButton.click();
+        ageField = null;
+        ageField =
+                driver.findElement(WicketBy.wicketPath("form_age"));
+        assertEquals("25", ageField.getAttribute("value"));
+        // now make a change in the modal 
 
+
+    }
+
+    @Test
+    public void testModalDialogMakesAChange() {
+        WebElement chooserLink =
+                driver.findElement(WicketBy.wicketPath("form_chooserLink"));
+        chooserLink.click();
+
+        WebElement chooserPopup =
+                driver.findElement(WicketBy.wicketPath("chooserWindow_content"));
+        assertTrue(chooserPopup.isDisplayed());
+        WebElement modalDialogAgeField =
+                driver.findElement(WicketBy.wicketPath("chooserWindow_content_chooser_chooserForm_age"));
+        modalDialogAgeField.clear();
+        modalDialogAgeField.sendKeys("" + NEW_AGE_VALUE);
+
+        WebElement modalDialogSubmit =
+                driver.findElement(WicketBy.wicketPath("chooserWindow_content_chooser_chooserForm_button"));
+        modalDialogSubmit.click();
+        
+        
+        WebElement ageField =
+                driver.findElement(WicketBy.wicketPath("form_age"));
+        assertEquals("" + NEW_AGE_VALUE, ageField.getAttribute("value"));
 
     }
 }
