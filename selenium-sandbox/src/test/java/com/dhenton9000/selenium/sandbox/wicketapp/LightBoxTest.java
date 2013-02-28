@@ -16,6 +16,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,17 +81,10 @@ public class LightBoxTest extends BaseSeleniumWicketTest {
         assertTrue(pixDisplay.isDisplayed());
         closeButton.click();
         
-//         WebDriverWait wait = new WebDriverWait(driver, 2L)
-//         {
-//
-//            @Override
-//            public <V> V until(Function<? super WebDriver, V> isTrue) {
-//                return super.until(isTrue);
-//            }
-//             
-//         };
-//         
-        
+         new WebDriverWait(driver, 1000)
+                 .until(ExpectedConditions.invisibilityOfElementLocated(
+                WicketBy.wicketPath("pixDisplay")));
+    
         pixDisplay = null;
         pixDisplay = 
         driver.findElement(By.id("pixDisplay"));
