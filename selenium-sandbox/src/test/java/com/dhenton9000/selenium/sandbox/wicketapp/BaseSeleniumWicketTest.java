@@ -6,9 +6,13 @@ package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
 import org.openqa.selenium.By;
+import org.openqa.selenium.HasInputDevices;
+import org.openqa.selenium.Mouse;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.Locatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +24,28 @@ public class BaseSeleniumWicketTest {
 
     private final Logger logger = LoggerFactory.getLogger(BaseSeleniumWicketTest.class);
 
+    public void mouseOverElement(WebElement element, WebDriver driver) {
+
+        Locatable hoverItem = (Locatable) element;
+        Mouse mouse = ((HasInputDevices) driver).getMouse();
+        mouse.mouseMove(hoverItem.getCoordinates());
+
+    }
+
     protected boolean isNotOnPageViaLinkText(String linkText, WebDriver driver) {
         boolean isNotOnPage = false;
         try {
             driver.findElement(By.linkText(linkText));
+        } catch (NoSuchElementException err) {
+            isNotOnPage = true;
+        }
+        return isNotOnPage;
+    }
+
+    protected boolean isNotOnPageViaId(String Id, WebDriver driver) {
+        boolean isNotOnPage = false;
+        try {
+            driver.findElement(By.id(Id));
         } catch (NoSuchElementException err) {
             isNotOnPage = true;
         }

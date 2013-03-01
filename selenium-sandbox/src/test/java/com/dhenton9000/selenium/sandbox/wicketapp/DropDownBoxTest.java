@@ -68,7 +68,7 @@ public class DropDownBoxTest {
         List<WebElement> companyItems = clickThis.getOptions();
         for (WebElement w:companyItems)
         {
-            logger.debug(w.getText()+" "+w.getAttribute("value"));
+           // logger.debug(w.getText()+" "+w.getAttribute("value"));
             if (w.getText().equals("HeroColor"))
             {
                 w.click();

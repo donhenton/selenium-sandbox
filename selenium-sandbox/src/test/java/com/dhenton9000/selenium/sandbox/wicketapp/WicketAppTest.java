@@ -5,17 +5,16 @@
 package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.openqa.selenium.NoSuchElementException;
-import static org.junit.Assert.*;
-import org.openqa.selenium.By;
 
 /**
  *

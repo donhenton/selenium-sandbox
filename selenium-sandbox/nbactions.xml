@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+    <action>
+        <actionName>CUSTOM-surefire-report</actionName>
+        <displayName>surefire-report</displayName>
+        <goals>
+            <goal>surefire-report:report</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-report-only</actionName>
+        <displayName>report-only</displayName>
+        <goals>
+            <goal>surefire-report:report-only</goal>
+        </goals>
+    </action>
+    <action>
+        <actionName>CUSTOM-build-no-test</actionName>
+        <displayName>build-no-test</displayName>
+        <goals>
+            <goal>resources:resources</goal>
+            <goal>compiler:compile</goal>
+            <goal>resources:testResources</goal>
+            <goal>compiler:testCompile</goal>
+        </goals>
+    </action>
+         
+        
+        
+</actions>

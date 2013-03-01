@@ -21,6 +21,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  *
@@ -75,6 +77,12 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
                 driver.findElement(WicketBy.wicketPath("form_chooserLink"));
         chooserLink.click();
 
+        
+         new WebDriverWait(driver, 1000)
+               .until(ExpectedConditions.presenceOfElementLocated(
+                WicketBy.wicketPath("chooserWindow_content")));
+        
+        
         WebElement chooserPopup =
                 driver.findElement(WicketBy.wicketPath("chooserWindow_content"));
         assertTrue(chooserPopup.isDisplayed());
@@ -82,6 +90,11 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
         WebElement closeButton = driver.findElement(By.className("w_close"));
         closeButton.click();
         ageField = null;
+        
+         new WebDriverWait(driver, 1000)
+               .until(ExpectedConditions.presenceOfElementLocated(
+                WicketBy.wicketPath("form_age")));
+        
         ageField =
                 driver.findElement(WicketBy.wicketPath("form_age"));
         assertEquals("25", ageField.getAttribute("value"));
@@ -96,6 +109,10 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
                 driver.findElement(WicketBy.wicketPath("form_chooserLink"));
         chooserLink.click();
 
+         new WebDriverWait(driver, 1000)
+               .until(ExpectedConditions.presenceOfElementLocated(
+                WicketBy.wicketPath("chooserWindow_content")));
+           
         WebElement chooserPopup =
                 driver.findElement(WicketBy.wicketPath("chooserWindow_content"));
         assertTrue(chooserPopup.isDisplayed());
@@ -107,6 +124,10 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
         WebElement modalDialogSubmit =
                 driver.findElement(WicketBy.wicketPath("chooserWindow_content_chooser_chooserForm_button"));
         modalDialogSubmit.click();
+        
+         new WebDriverWait(driver, 1000)
+                 .until(ExpectedConditions.invisibilityOfElementLocated(
+                WicketBy.wicketPath("chooserWindow_content")));
         
         
         WebElement ageField =
