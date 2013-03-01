@@ -34,7 +34,7 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
     public static final String MODAL_DIALOG_PAGE = WEB_APP_HOME_PAGE + "/ModalInputPage";
     public static final String MODAL_DIALOG_TITLE = "Enter Your Data";
     public static final int NEW_AGE_VALUE = 768;
-    private final Logger logger = LoggerFactory.getLogger(WicketAppTest.class);
+    private final Logger logger = LoggerFactory.getLogger(RestaurantEditTest.class);
     private static WebDriver driver;
 
     @BeforeClass

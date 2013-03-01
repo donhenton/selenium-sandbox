@@ -8,6 +8,7 @@ import com.dhenton9000.selenium.wicket.WicketBy;
 import org.openqa.selenium.By;
 import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.Mouse;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
@@ -30,6 +31,17 @@ public class BaseSeleniumWicketTest {
         Mouse mouse = ((HasInputDevices) driver).getMouse();
         mouse.mouseMove(hoverItem.getCoordinates());
 
+    }
+
+    protected boolean isAlertPresent(WebDriver driver) {
+        boolean isAlertPresent = true;
+
+        try {
+            driver.switchTo().alert().dismiss();
+        } catch (NoAlertPresentException err) {
+            isAlertPresent = false;
+        }
+        return isAlertPresent;
     }
 
     protected boolean isNotOnPageViaLinkText(String linkText, WebDriver driver) {

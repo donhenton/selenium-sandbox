@@ -30,7 +30,7 @@ public class DropDownBoxTest {
 
     public static final String WEB_APP_HOME_PAGE = "http://localhost:9090/wicket-sandbox";
     public static final String DROPBOX_PAGE = WEB_APP_HOME_PAGE + "/ApplicationsUsers";
-    private final Logger logger = LoggerFactory.getLogger(WicketAppTest.class);
+    private final Logger logger = LoggerFactory.getLogger(RestaurantEditTest.class);
     private static WebDriver driver;
     private static final String DROPBOX_PATH = "applicationsSelect";
 
