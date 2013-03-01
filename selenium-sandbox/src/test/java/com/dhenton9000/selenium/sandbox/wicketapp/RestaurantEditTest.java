@@ -55,7 +55,7 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
     }
     //
 
-    // @Test
+   @Test
     public void testRestaurantPage() {
         //start in the initial state
 
@@ -78,7 +78,7 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
 
     }
 
-    // @Test
+     @Test
     public void testEditMode() {
         final String selectedRestaurantText = "Buffas Delicatessen";
         final String newName = "fred";
