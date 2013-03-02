@@ -5,6 +5,7 @@
 package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
+import java.io.File;
 import org.openqa.selenium.By;
 import org.openqa.selenium.HasInputDevices;
 import org.openqa.selenium.Mouse;
@@ -33,6 +34,14 @@ public class BaseSeleniumWicketTest {
 
     }
 
+     public static String createPathToTestResources(String htmlFilename) {
+        char sc = File.separatorChar;
+        String currentDir = System.getProperty("user.dir");
+        String resourcesPath = currentDir + sc + "src" + sc + "test" + sc + "resources";
+        String htmlPath = resourcesPath + sc + htmlFilename;
+        return htmlPath;
+    }
+    
     protected boolean isAlertPresent(WebDriver driver) {
         boolean isAlertPresent = true;
 
