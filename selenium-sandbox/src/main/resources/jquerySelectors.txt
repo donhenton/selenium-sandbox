@@ -1,0 +1,6 @@
+http://stackoverflow.com/questions/5490523/selecting-and-identifying-element-with-jquery-to-use-it-in-selenium-2-java-api
+http://stackoverflow.com/questions/5614170/jquery-element-selector-with-id-from-selenium-2-webdriver?lq=1
+http://stackoverflow.com/questions/5605456/select-an-element-with-jquery-previously-selected-with-selenium-2-selector
+http://stackoverflow.com/questions/5614170/jquery-element-selector-with-id-from-selenium-2-webdriver/5626648#5626648
+http://blog.rajasankar.in/2012/03/locate-anything-with-jquery-in-selenium.html
+Firequery for console interaction with jQuery

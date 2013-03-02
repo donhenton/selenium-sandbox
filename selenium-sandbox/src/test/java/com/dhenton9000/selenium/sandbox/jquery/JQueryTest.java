@@ -17,6 +17,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -32,11 +33,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author Don
  */
-public class JQueryTests extends BaseSeleniumWicketTest {
+public class JQueryTest extends BaseSeleniumWicketTest {
     public static final String HTML_FILE = "selenium3.html";
 
     private static JavascriptExecutor js;
-    private final static Logger logger = LoggerFactory.getLogger(JQueryTests.class);
+    private final static Logger logger = LoggerFactory.getLogger(JQueryTest.class);
     private static WebDriver driver;
 
     @BeforeClass
@@ -46,12 +47,13 @@ public class JQueryTests extends BaseSeleniumWicketTest {
 
         //  driver = new FirefoxDriver(binary, profile);
         driver = new FirefoxDriver();
-
+        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.get(createPathToTestResources(HTML_FILE));
+        driver.get("file:///"+createPathToTestResources(HTML_FILE));
         js = (JavascriptExecutor) driver;
 
         // load jQuery dynamically
+        // this allows selenium to exploit jquery;
         URL jqueryUrl = Resources.getResource("jquery.min.js");
         String jqueryText = null;
         try {
@@ -73,8 +75,8 @@ public class JQueryTests extends BaseSeleniumWicketTest {
     @AfterClass
     public static void after() {
 
-       // driver.close();
-       // driver.quit();
+        driver.close();
+        driver.quit();
 
     }
 
@@ -86,15 +88,16 @@ public class JQueryTests extends BaseSeleniumWicketTest {
         assertEquals("Remove", removeButton.getText());
     }
     
-    @Test
-    public void testClickBySeleniumObject()
+    @Ignore
+    public void testClickBySeleniumObjectCSSSelector()
     {
     
+        //Selenium can only select via id, text, linktext or css selectors
         Selenium selenium = new WebDriverBackedSelenium(driver, "file://"+createPathToTestResources(HTML_FILE));
         selenium.click("css=#users tr:has(td:contains('Frank')) button:contains('Remove')");
     }
     
-    @Test
+    @Ignore
     public void testClickByDirectExecute()
     {
     
