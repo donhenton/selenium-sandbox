@@ -7,19 +7,18 @@ package com.dhenton9000.selenium.sandbox.wicketapp;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.util.concurrent.TimeUnit;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.*;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 /**
  *
