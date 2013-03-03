@@ -44,12 +44,13 @@ public class BaseSeleniumWicketTest {
     
     protected boolean isAlertPresent(WebDriver driver) {
         boolean isAlertPresent = true;
-
+        String oldWindow = driver.getWindowHandle();
         try {
-            driver.switchTo().alert().dismiss();
+            driver.switchTo().alert();
         } catch (NoAlertPresentException err) {
-            isAlertPresent = false;
+            return false;
         }
+        driver.switchTo().window(oldWindow);
         return isAlertPresent;
     }
 

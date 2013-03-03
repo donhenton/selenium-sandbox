@@ -8,18 +8,18 @@ import com.dhenton9000.selenium.wicket.WicketBy;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import static org.junit.Assert.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -51,8 +51,11 @@ public class OnHoverTest extends BaseSeleniumWicketTest {
 
     @AfterClass
     public static void after() {
-        driver.close();
-        driver.quit();
+        if (driver != null)
+        {
+            driver.close();
+            driver.quit();
+        }
     }
 
     @Test
@@ -66,7 +69,24 @@ public class OnHoverTest extends BaseSeleniumWicketTest {
     }
     
     @Test
-    public void testThatHoverHasSubmittedText() {
+    public void testThatHoverHasSubmittedTextUsingFirefoxDriver() {
+        performHoverTest();
+         
+
+    }
+    //htmlunit driver does not work!!!!
+//    @Test
+//    public void testThatHoverHasSubmittedTextUsingHtmlDriver() {
+//        driver.close();
+//        driver.quit();
+//        driver = new HtmlUnitDriver(true);
+//        performHoverTest();
+//        
+//         
+//
+//    }
+
+    private void performHoverTest() {
         WebElement hoverTextBox =
                 driver.findElement(WicketBy.wicketPath("hoverForm_hoverText"));
        // assertTrue(isNotOnPageViaWicketPath(TOOLTIP_DIV_ID, driver));
@@ -94,7 +114,5 @@ public class OnHoverTest extends BaseSeleniumWicketTest {
                  driver.findElement(By.id(TOOLTIP_DIV_ID));
         String divText = hoverDiv.getText();
         assertTrue(divText.indexOf(STUFF)> -1);
-         
-
     }
 }
