@@ -37,7 +37,7 @@ public class SignInTest extends BaseSeleniumWicketTest {
 
         driver = new HtmlUnitDriver();
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-      //  driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+     //   driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
 
     }
 
@@ -66,7 +66,7 @@ public class SignInTest extends BaseSeleniumWicketTest {
         passWordText.sendKeys("admin");
         signInForm.submit();
 
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(
                 By.linkText(SIGN_OUT_LINK_TEXT)));
 

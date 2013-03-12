@@ -119,7 +119,7 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
         WebElement addButton =
                 driver.findElement(WicketBy.wicketPath("addPanel_addForm_addButton"));
         addButton.click();
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("editorPanel_restaurantForm_name")));
         WebElement editFormNameField =
@@ -133,7 +133,7 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
         WebElement editFormSubmitButton =
                 driver.findElement(WicketBy.wicketPath("editorPanel_restaurantForm_submitButton"));
         editFormSubmitButton.click();
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.invisibilityOfElementLocated(
                 WicketBy.wicketPath("editorPanel_restaurantForm_name")));
         
@@ -144,7 +144,7 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
                 driver.findElement(By.linkText(ADD_RESTAURANT_SAMPLE));
         assertEquals(ADD_RESTAURANT_SAMPLE, selectedRestaurant.getText());
         selectedRestaurant.click();
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("editorPanel_restaurantForm_deleteButton")));        
 
@@ -152,14 +152,14 @@ public class RestaurantEditTest extends BaseSeleniumWicketTest {
                 driver.findElement(WicketBy.wicketPath("editorPanel_restaurantForm_deleteButton"));
         deleteButton.click();
         
-        new WebDriverWait(driver, 1500)
+        new WebDriverWait(driver, 15)
                .until(ExpectedConditions.alertIsPresent());
         
         
         driver.switchTo().alert().accept();
         
         
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.invisibilityOfElementLocated(
                 WicketBy.wicketPath("editorPanel_restaurantForm_name")));
 

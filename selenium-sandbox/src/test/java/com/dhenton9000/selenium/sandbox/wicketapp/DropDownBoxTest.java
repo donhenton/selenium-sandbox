@@ -58,7 +58,7 @@ public class DropDownBoxTest {
     public void testDropBox() {
         WebElement dropDownListBox =
                 driver.findElement(WicketBy.wicketPath(DROPBOX_PATH));
-
+        
         Select clickThis = new Select(dropDownListBox);
         //clickThis.selectByVisibleText("Hero Color");
        // clickThis.selectByValue("55");
@@ -78,7 +78,7 @@ public class DropDownBoxTest {
         
         //this is here to give the call to the db to take place
         //rows to the table need to have some time to show
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("userTable")));
                 

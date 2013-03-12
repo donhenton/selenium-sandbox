@@ -62,7 +62,7 @@ public class OnHoverTest extends BaseSeleniumWicketTest {
     public void testThatPageHasNoHoverWhenTextBoxIsEmpty() {
         WebElement hoverTextBox =
                 driver.findElement(WicketBy.wicketPath("hoverForm_hoverText"));
-        assertTrue(isNotOnPageViaWicketPath(TOOLTIP_DIV_ID, driver));
+        assertTrue(isNotOnPageViaId(TOOLTIP_DIV_ID, driver));
         String hoverText = hoverTextBox.getAttribute("value");
         assertTrue(StringUtils.isEmpty(hoverText));
     
@@ -97,7 +97,7 @@ public class OnHoverTest extends BaseSeleniumWicketTest {
         hoverTextBox.sendKeys(STUFF);
         hoverForm.submit();
         
-        new WebDriverWait(driver, 1000)
+        new WebDriverWait(driver, 10)
                .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("hoverLabel")));
                 

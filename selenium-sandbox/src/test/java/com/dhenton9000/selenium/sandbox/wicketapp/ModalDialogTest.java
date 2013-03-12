@@ -78,7 +78,7 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
         chooserLink.click();
 
         
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("chooserWindow_content")));
         
@@ -91,10 +91,10 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
         closeButton.click();
         ageField = null;
         
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("form_age")));
-        
+        ageField = null;
         ageField =
                 driver.findElement(WicketBy.wicketPath("form_age"));
         assertEquals("25", ageField.getAttribute("value"));
@@ -109,7 +109,7 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
                 driver.findElement(WicketBy.wicketPath("form_chooserLink"));
         chooserLink.click();
 
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                .until(ExpectedConditions.presenceOfElementLocated(
                 WicketBy.wicketPath("chooserWindow_content")));
            
@@ -125,7 +125,7 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
                 driver.findElement(WicketBy.wicketPath("chooserWindow_content_chooser_chooserForm_button"));
         modalDialogSubmit.click();
         
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                  .until(ExpectedConditions.invisibilityOfElementLocated(
                 WicketBy.wicketPath("chooserWindow_content")));
         
@@ -133,6 +133,7 @@ public class ModalDialogTest extends BaseSeleniumWicketTest {
         WebElement ageField =
                 driver.findElement(WicketBy.wicketPath("form_age"));
         assertEquals("" + NEW_AGE_VALUE, ageField.getAttribute("value"));
+        
 
     }
 }

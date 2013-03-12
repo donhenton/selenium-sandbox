@@ -81,7 +81,7 @@ public class LightBoxTest extends BaseSeleniumWicketTest {
         assertTrue(pixDisplay.isDisplayed());
         closeButton.click();
         
-         new WebDriverWait(driver, 1000)
+         new WebDriverWait(driver, 10)
                  .until(ExpectedConditions.invisibilityOfElementLocated(
                 WicketBy.wicketPath("pixDisplay")));
     
