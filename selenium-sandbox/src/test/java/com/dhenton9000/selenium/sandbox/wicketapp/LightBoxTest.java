@@ -5,7 +5,6 @@
 package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
-import com.google.common.base.Function;
 import java.util.concurrent.TimeUnit;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;

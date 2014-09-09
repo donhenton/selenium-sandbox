@@ -4,7 +4,6 @@
  */
 package com.dhenton9000.selenium.sandbox.jquery;
 
-import com.dhenton9000.selenium.wicket.WicketBy;
 import org.openqa.selenium.interactions.Action;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +16,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 // http://selenium.polteq.com/en/perform-a-sequence-of-actions-with-selenium-webdriver
 
