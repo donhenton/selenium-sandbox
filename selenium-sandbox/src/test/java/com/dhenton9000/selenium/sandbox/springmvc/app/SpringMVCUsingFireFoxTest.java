@@ -4,17 +4,9 @@
  */
 package com.dhenton9000.selenium.sandbox.springmvc.app;
 
-import com.dhenton9000.selenium.sandbox.jquery.JQueryTest;
 import com.dhenton9000.selenium.sandbox.wicketapp.BaseSeleniumWicketTest;
-import com.dhenton9000.selenium.wicket.WicketBy;
-import com.google.common.base.Charsets;
-import com.google.common.io.Resources;
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -27,10 +19,6 @@ import org.slf4j.LoggerFactory;
 import static org.junit.Assert.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.interactions.HasInputDevices;
-import org.openqa.selenium.interactions.Mouse;
-import org.openqa.selenium.internal.Locatable;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
