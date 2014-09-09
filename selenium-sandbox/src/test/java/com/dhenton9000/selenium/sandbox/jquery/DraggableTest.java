@@ -35,8 +35,8 @@ public class DraggableTest {
         FirefoxProfile profile = new FirefoxProfile();
         profile.setEnableNativeEvents(true);
         driver = new FirefoxDriver(profile);
-        driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(50, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
     }
 
     @AfterClass
@@ -66,7 +66,7 @@ public class DraggableTest {
         driver.get("http://jqueryui.com/resources/demos/selectable/default.html");
         List<WebElement> listItems = driver.findElements(By.cssSelector("ol#selectable *"));
         Actions builder = new Actions(driver);
-        builder.clickAndHold(listItems.get(1)).clickAndHold(listItems.get(2)).click();
+        builder.click(listItems.get(1)).click(listItems.get(2)).click();
         Action selectMultiple = builder.build();
         selectMultiple.perform();
     }

@@ -6,6 +6,7 @@ package com.dhenton9000.selenium.sandbox.springmvc.app;
 
 import com.dhenton9000.selenium.sandbox.jquery.JQueryTest;
 import com.dhenton9000.selenium.sandbox.wicketapp.BaseSeleniumWicketTest;
+import com.dhenton9000.selenium.wicket.WicketBy;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import java.io.IOException;
@@ -27,6 +28,8 @@ import static org.junit.Assert.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * This test can be run with a javascript enabled HtmlUnit Driver.
@@ -53,7 +56,9 @@ public class SpringMVCUsingFireFoxTest extends BaseSeleniumWicketTest {
 //        }
         driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.get(SPRING_MVC_HOME_PAGE);
+       
+        driver.manage().window().maximize();
+      //  driver.get(SPRING_MVC_HOME_PAGE);
         js = (JavascriptExecutor) driver;
 
         // load jQuery dynamically should it not be on the page you are
@@ -85,18 +90,36 @@ public class SpringMVCUsingFireFoxTest extends BaseSeleniumWicketTest {
 
     @Test
     public void testMarkingMaryOnceGreysOutTheOtherMarys() {
-        WebElement jQueryDemoLink = driver.findElement(By.linkText("JQuery Demos"));
-        jQueryDemoLink.click();
+        
+        driver.get("http://donhenton.appspot.com/app/jquery/demos/formSamples");
+       // WebElement jQueryDemoLink = driver.findElement(By.partialLinkText("JQuery Demos"));
+       // jQueryDemoLink.click();
+        
 
-        WebElement formDemoLink = driver.findElement(By.linkText("Form Samples"));
-        formDemoLink.click();
+//        By formsMenuLocator = By.partialLinkText("Forms");
+//        
+//              new WebDriverWait(driver, 3)
+//                .until(ExpectedConditions.presenceOfElementLocated(
+//                formsMenuLocator));
+
+//        WebElement formsLink = driver.findElement(formsMenuLocator);
+//        formsLink.click();
+//        By formSamplesLocator = By.partialLinkText("rm Samp");
+//        new WebDriverWait(driver, 3)
+//                .until(ExpectedConditions.presenceOfElementLocated(
+//                formSamplesLocator));
+//
+//        
+//        WebElement formSamplesDemoLink = driver.findElement(formSamplesLocator);
+//        formSamplesDemoLink.click();
+        
 
         String jQuerySelector = "'tr:contains(\"Union\")  td input:eq(1)'";
 
         WebElement maryUnionRadio = (WebElement) js.executeScript("return $(" + jQuerySelector + ").get(0);");
         assertEquals("team2_1", maryUnionRadio.getAttribute("id"));
         maryUnionRadio.click();
-        List<WebElement> markedItems = driver.findElements(By.cssSelector("label.greyOut"));
+        List<WebElement> markedItems = driver.findElements(By.cssSelector("label.text-error"));
         assertEquals(3,markedItems.size());
         for (WebElement w:markedItems)
         {
