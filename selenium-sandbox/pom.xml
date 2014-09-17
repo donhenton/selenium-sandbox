@@ -28,7 +28,27 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>generic</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.16</version>
+                        <configuration>
+                            <includes>
+                                <include>/com/dhenton9000/selenium/generic/*Test.java</include>  
+                                <include>/com/ni/test/admin/*Tests.java</include>  
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
+    </profiles>
     <repositories>
         <repository>
             <id>java.net</id>
@@ -143,7 +163,12 @@
             <scope>test</scope>
         </dependency>
     
-      
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.6</version>
+            <type>jar</type>
+        </dependency>
     
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
