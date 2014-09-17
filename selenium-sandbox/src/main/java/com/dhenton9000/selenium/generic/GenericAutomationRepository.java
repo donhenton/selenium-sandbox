@@ -9,6 +9,7 @@ package com.dhenton9000.selenium.generic;
  *
  * @author dhenton
  */
+import com.dhenton9000.selenium.wicket.WicketBy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;

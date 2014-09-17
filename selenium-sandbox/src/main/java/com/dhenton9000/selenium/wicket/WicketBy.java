@@ -24,25 +24,40 @@ public class WicketBy extends By {
      * Creates a new instance of {@link WicketBy}.
      *
      * @param wicketPath the wicket path (eg: "id1:id2:id3")
+     * @param exactMatch if true the path must match exactly 
+     * otherwise the path just has to contain the string
+     * 
      */
-    private WicketBy(String wicketPath) {
+    private WicketBy(String wicketPath,boolean matchExact) {
         this.wicketPath = wicketPath;
-        this.xpathExpression = convert(wicketPath);
+        this.xpathExpression = convert(wicketPath,matchExact);
+        ////*[starts-with(@class,"atag")]
     }
 
-    /**
-     * Factory method to create this specific By.
-     *
-     * @param wicketPath the wicket path (eg: "id1:id2:id3")
-     * @return By of type WicketBy
-     */
-    public static By wicketPath(String wicketPath) {
-        return new WicketBy(wicketPath);
+
+    public static By wicketPathMatch(String wicketPath) {
+        return new WicketBy(wicketPath,true);
+    }
+    
+    public static By wicketPath(String wicketPath)
+    {
+        return wicketPathMatch(wicketPath);
     }
 
-    private String convert(String wicketPath) {
+    public static By wicketPathContains(String wicketPath)
+    {
+        return new WicketBy(wicketPath,false);
+    }        
+    
+    private String convert(String wicketPath,boolean matchExact) {
         String renderedPathVal = wicketPath.replaceAll(":", "_");
-        return String.format("//*[@wicketpath='%s']", renderedPathVal);
+        String matchVariable = "//*[@wicketpath='%s']";
+        if (!matchExact)
+        {
+            matchVariable = "//*[contains(@wicketpath,'%s')]";
+        }
+        
+        return String.format(matchVariable, renderedPathVal);
     }
 
  
