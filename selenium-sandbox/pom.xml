@@ -40,7 +40,7 @@
                         <configuration>
                             <includes>
                                 <include>/com/dhenton9000/selenium/generic/*Test.java</include>  
-                                <include>/com/ni/test/admin/*Tests.java</include>  
+                                 
                             </includes>
                         </configuration>
                     </plugin>
