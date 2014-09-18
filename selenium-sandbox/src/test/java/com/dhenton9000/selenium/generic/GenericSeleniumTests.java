@@ -47,6 +47,18 @@ public class GenericSeleniumTests extends GenericTestBase {
                 .executeScript(
                         "return  $('table.cssTableCass tbody tr td input').get( )");
          
+        // this uses a filter in jquery
+    
+        List<WebElement> things = (List<WebElement>) this.getAdminRepository()
+//                .getAutomation()
+//                .getJavascriptExecutor()
+//                .executeScript(
+//                        "return $('#slpha div#beta div.controlItem').children().filter(function(){ return $(this).css('display')!='none'}).get()");
+// 
+    
+      
+    
+    
      */    
      // note the use of return and .get() at the end which converts to HTMLElements
          
