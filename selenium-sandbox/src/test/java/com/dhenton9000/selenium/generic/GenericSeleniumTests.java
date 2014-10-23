@@ -22,8 +22,8 @@ public class GenericSeleniumTests extends GenericTestBase {
 
     @Test
     public void testSimple() {
-         assertNotNull(this.getGenericRepository());
-        this.getGenericRepository().initialNavigation();
+         assertNotNull(this.getAppspotRepository());
+        this.getAppspotRepository().initialNavigation();
         
 
    
@@ -41,7 +41,7 @@ public class GenericSeleniumTests extends GenericTestBase {
 
       // this can also be done via  jquery where filters can be used
       /*
-         List<WebElement> inputSample = (List<WebElement>) this.getGenericRepository()
+         List<WebElement> inputSample = (List<WebElement>) this.getAppspotRepository()
                 .getAutomation()
                 .getJavascriptExecutor()
                 .executeScript(

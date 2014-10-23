@@ -20,8 +20,15 @@ import org.slf4j.LoggerFactory;
  */
 public class GenericTestBase {
 
-    private   GenericRepository genericRepository = null;
+    private   AppspotRepository appspotRepository = null;
     private static final Logger LOG = LoggerFactory.getLogger(GenericTestBase.class);
+    /**
+     * if true then close driver after each test
+     * in the @Before method, if set to false, then browser stays 
+     * open for inspection
+     * 
+     */
+    private boolean closeDriver = true;
 
     public GenericTestBase() {
         Configuration config = null;
@@ -33,31 +40,52 @@ public class GenericTestBase {
             LOG.info("did not find env.properties file");
         }
 
-        genericRepository = new GenericRepository(config);
+        appspotRepository = new AppspotRepository(config);
     }
 
     public GenericTestBase(Configuration config) {
 
-        genericRepository = new GenericRepository(config);
+        appspotRepository = new AppspotRepository(config);
     }
 
     /**
-     * @return the genericRepository
+     * @return the appspotRepository
      */
-    public GenericRepository getGenericRepository() {
-        return genericRepository;
+    public AppspotRepository getAppspotRepository() {
+        return appspotRepository;
     }
     
     public GenericAutomationRepository getAutomation()
     {
-        return genericRepository.getAutomation();
+        return appspotRepository.getAutomation();
     }
 
     
 
     @After 
     public void teardownTest () {
-      LOG.info("quitting driver");
-       getGenericRepository().getAutomation().quitDriver();
+     
+      LOG.debug("in teardown class with flag "+isCloseDriver());
+      if (isCloseDriver())
+      {
+            LOG.info("quitting driver ");
+            getAppspotRepository().getAutomation().quitDriver();
+      }
     }
+
+    /**
+     * @return the closeDriver
+     */
+    public boolean isCloseDriver() {
+        return closeDriver;
+    }
+
+    /**
+     * @param closeDriver the closeDriver to set
+     */
+    public void setCloseDriver(boolean closeDriver) {
+        this.closeDriver = closeDriver;
+    }
+
+    
 }

@@ -12,23 +12,24 @@ import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
 
 /**
- *
+ * code for interacting with the appspot application
+ * http://donhenton.appspot.com
  * @author dhenton
  */
-public class GenericRepository {
+public class AppspotRepository {
 
     private Configuration config;
     private GenericAutomationRepository automation;
-    private static final Logger LOG = LoggerFactory.getLogger(GenericRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AppspotRepository.class);
 
-    public GenericRepository(WebDriver driver, Configuration config) {
+    public AppspotRepository(WebDriver driver, Configuration config) {
 
         this.config = config;
         this.automation = new GenericAutomationRepository(driver, config);
 
     }
 
-    public GenericRepository(Configuration config) {
+    public AppspotRepository(Configuration config) {
 
         this.config = config;
         this.automation = new GenericAutomationRepository(config);

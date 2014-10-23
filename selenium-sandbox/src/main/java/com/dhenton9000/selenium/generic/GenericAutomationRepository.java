@@ -30,6 +30,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.html5.LocalStorage;
 
 public class GenericAutomationRepository {
 
@@ -38,15 +42,29 @@ public class GenericAutomationRepository {
     private Configuration config;
     private WaitMethods waitMethods;
     private JavascriptExecutor js;
+    private LocalStorage localStorage;
 
+    /**
+     * construct the repository from a config file, which will specify the
+     * driver
+     *
+     * @param config
+     */
     public GenericAutomationRepository(Configuration config) {
         driver = null;
         this.config = config;
         configureDriver();
         this.waitMethods = new WaitMethods(driver);
+        this.js = (JavascriptExecutor) driver;
 
     }
 
+    /**
+     * construct the repository with a given configuration and web driver
+     *
+     * @param driver
+     * @param config
+     */
     public GenericAutomationRepository(WebDriver driver, Configuration config) {
         this.driver = driver;
         this.config = config;
@@ -58,6 +76,13 @@ public class GenericAutomationRepository {
         return this.waitMethods;
     }
 
+    /**
+     * given a jquery Snippet, return a list of web elements this is awfully
+     * similar to css selector
+     *
+     * @param jQuerySelector
+     * @return
+     */
     public List<WebElement> getElementsByJQuery(String jQuerySelector) {
 
         List<WebElement> elements = null;
@@ -73,16 +98,27 @@ public class GenericAutomationRepository {
         return elements;
     }
 
+    /**
+     * an enumeration of selection types, eg. select by css selector use
+     * 'cssSelector'
+     */
     public enum SELECTOR_CHOICE {
         id, name, className, linkText,
         xpath, tagName, cssSelector,
         partialLinkText, wicketPathMatch, wicketPathContains
     }
 
+    /**
+     * driver types currently only firefox supported
+     */
     public enum DRIVER_TYPES {
         FireFox, InternetExplorer, Opera, Safari, Chrome;
     }
 
+    /**
+     * set up the driver with configuration parameters
+     *
+     */
     private void configureDriver() {
 
         LoggingPreferences logs = new LoggingPreferences();
@@ -95,7 +131,7 @@ public class GenericAutomationRepository {
 
         String driverTypeString = this.config.getString("test.selenium.browser");
         if (driverTypeString == null) {
-            throw new RuntimeException("must specify 'test.selenium.browser' in env.properties");
+            throw new RuntimeException("must specify 'test.selenium.browser' in prop file");
         }
 
         DRIVER_TYPES driverType = DRIVER_TYPES.valueOf(driverTypeString);
@@ -109,7 +145,9 @@ public class GenericAutomationRepository {
             default:
                  DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
                  desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+                LOG.debug("creating firefox driver");
                  driver = new FirefoxDriver(desiredCapabilities);
+                LOG.debug("got firefox driver");
                 break;
             case InternetExplorer:
                 break;
@@ -120,8 +158,8 @@ public class GenericAutomationRepository {
             case Chrome:
                 break;
             
-
         }
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         LOG.debug("driver is loaded via config " + driver.toString());
 
     }
@@ -131,15 +169,44 @@ public class GenericAutomationRepository {
     }
 
     public JavascriptExecutor getJavascriptExecutor() {
-        if (js == null)
+        if (js == null) {
             js = (JavascriptExecutor) driver;
+        }
         return js;
+    }
+
+    public LocalStorage getLocalStorage()
+    {
+        if (localStorage == null) {
+            localStorage = (LocalStorage) driver;
+        }
+        return localStorage;
+    }
+
+    /**
+     * set the browser size to specific values pass in null if you don't want to
+     * use that portion of the code
+     *
+     * @param pos
+     * @param size
+     */
+    public void setBrowserSize(Point pos, Dimension size) {
+        if (pos != null) {
+            driver.manage().window().setPosition(pos);
+        }
+        if (size != null) {
+            driver.manage().window().setSize(size);
+        }
+    }
+
+    public void maximizeWindow() {
+        driver.manage().window().maximize();
     }
 
     /**
      * generate the By selector
      *
-     * @param selectorChoice the desired selector
+     * @param selectorChoice the desired selector, eg by css Selector
      * @param selectorValue the string to search for
      * @return the By element
      */
@@ -197,6 +264,9 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * dump the driver logs
+     */
     public void dumpLogs() {
         Logs logs = driver.manage().logs();
         LogEntries logEntries = logs.get(LogType.DRIVER);
@@ -211,6 +281,12 @@ public class GenericAutomationRepository {
         }
     }
 
+    /**
+     * Hover over the selected item
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     */
     public void hoverOn(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         Actions builder = new Actions(driver);
@@ -219,11 +295,25 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * Hover over the given WebElement
+     *
+     * @param e
+     */
     public void hoverOn(WebElement e) {
         Actions builder = new Actions(driver);
         builder.moveToElement(e).build().perform();
+        
+        
     }
 
+    /**
+     * Enter text into a text box
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param textToSend
+     */
     public void enterText(SELECTOR_CHOICE selectorChoice, String selectorValue, String textToSend) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -232,6 +322,13 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * Enter text into a text box
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param number the number to enter
+     */
     public void enterText(SELECTOR_CHOICE selectorChoice, String selectorValue, int number) {
 
         String numberAsText = Integer.toString(number);
@@ -239,24 +336,46 @@ public class GenericAutomationRepository {
 
     }
     
-    public List<WebElement> getListOfOptionsForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue)
-    {
+     public void scrollElementIntoView(WebElement element) {
+       ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+    }
+    public void scrollElementIntoView(String cssSelector) {
+        String exScript = "$('"+cssSelector+"')[0].scrollIntoView(true)";
+        ((JavascriptExecutor) driver).executeScript(exScript);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+            
+        }
+    }
+
+    /**
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return the elements found
+     */
+    public List<WebElement> getListOfOptionsForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue) {
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         return dropdown.getOptions();
     }
     
-    
-    public boolean checkOptionTextPresentForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue,String textToFind)
-    {
+    /**
+     * Is the option with the given text found in the dropbox?
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param textToFind
+     * @return
+     */
+    public boolean isOptionTextPresentForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue, String textToFind) {
        List<WebElement> elems =  getListOfOptionsForDropdown(selectorChoice,  selectorValue);
        boolean foundIt = false;
-       if (elems != null & !elems.isEmpty())
-       {
-           for (WebElement e: elems)
-           {
-               if (e.getText().equals(textToFind))
-               {
+        if (elems != null & !elems.isEmpty()) {
+            for (WebElement e : elems) {
+                if (e.getText().equals(textToFind)) {
                    foundIt = true;
                    break;
                }
@@ -265,7 +384,14 @@ public class GenericAutomationRepository {
        return foundIt;
     }
     
-
+    /**
+     * return the text of the first selected option for a dropdown or null if
+     * not found
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return first selected option or null
+     */
     public String getSelectedOptionForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue) {
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
@@ -275,33 +401,58 @@ public class GenericAutomationRepository {
         return dropdown.getFirstSelectedOption().getText();
     }
 
+    /**
+     * Select a dropdown item by text
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param optionText
+     */
     public void selectDropdownOptionByText(SELECTOR_CHOICE selectorChoice, String selectorValue, String optionText) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         dropdown.selectByVisibleText(optionText);
         
-
     }
 
-    public void selectDropdownOptionByValue(SELECTOR_CHOICE selectorChoice, String selectorValue, String optionText) {
+    /**
+     * Select a dropdown item by item value
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param value
+     */
+    public void selectDropdownOptionByValue(SELECTOR_CHOICE selectorChoice, String selectorValue, String value) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
-        dropdown.selectByValue(optionText);
+        dropdown.selectByValue(value);
         
-
     }
     
+    /**
+     * select a dropdown item by index
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param index
+     */
     public void selectDropdownOptionByIndex(SELECTOR_CHOICE selectorChoice, String selectorValue, int index) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         dropdown.selectByIndex(index);
         
-
     }
     
+    /**
+     * get the text of a web element
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return
+     */
     public String getText(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -309,6 +460,14 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * get the attribute of a web element
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @param attribute the desired attribute
+     * @return
+     */
     public String getAttribute(SELECTOR_CHOICE selectorChoice, String selectorValue, String attribute) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -316,11 +475,27 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * check if an element is visible
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return true if visible
+     */
+
     public boolean verifyElementIsVisible(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         return driver.findElement(selectionBy).isDisplayed();
     }
+
+    /**
+     * check if an element is enabled
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return true if visible
+     */
 
     public boolean verifyElementIsEnabled(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
@@ -328,11 +503,26 @@ public class GenericAutomationRepository {
         return driver.findElement(selectionBy).isEnabled();
     }
 
+    /**
+     * find all elements that match the selector
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return a list of all elements
+     */
     public List<WebElement> findElements(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         return driver.findElements(selectionBy);
     }
+
+    /**
+     * find the first element that matchs the selector
+     *
+     * @param selectorChoice selection type, eg cssSelector
+     * @param selectorValue the value to select by eg. '.myStyleClass'
+     * @return
+     */
 
     public WebElement findElement(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
@@ -341,16 +531,29 @@ public class GenericAutomationRepository {
 
     }
 
+    /**
+     * close and clean up the driver
+     */
     public void quitDriver() {
         driver.close();
         driver.quit();
     }
 
+    /**
+     * navigate to a page url
+     *
+     * @param url
+     */
     public void navigateToWebPage(String url) {
         driver.get(url);
 
     }
 
+    /**
+     * get the page title of web page
+     *
+     * @return
+     */
     public String getPageTitle() {
         String pageTitle = driver.getTitle();
         return pageTitle;
