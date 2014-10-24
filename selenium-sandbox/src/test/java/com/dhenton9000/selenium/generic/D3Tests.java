@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
+import org.junit.Ignore;
 /**
  *
  * @author dhenton
@@ -43,24 +44,36 @@ public class D3Tests extends GenericTestBase {
         
     }
     
-    @Test
-    public void testD3()
+    @Ignore
+    public void leftClickDemo()
     {
-        assertTrue(true);
-        //this.getAutomation().findElement(GenericAutomationRepository.SELECTOR_CHOICE.cssSelector, null);
-        //$('#menu ul li ul li ul li a[href$="treeDemo"]')
+        
         gotoD3Page();
+        String template = "d3.selectAll('svg g[data-id=\"%d\"]')"
+                + ".each("
+                + "function(d,i) { var f = d3.select(this).on(\"click\");  "
+                + "f.apply(this,[d],i)})";
+        String nodeClick = String.format(template,4);
+        getAutomation().getJavascriptExecutor().executeScript(nodeClick);
+        
+        
     }
     
+    @Test
+    public void testMouseDemo()
+    {
+        String mouseMove = "var clickEvent = document.createEvent('MouseEvents'); "
+                + "clickEvent.initMouseEvent(............ )";
+    }
     
      private void gotoD3Page() {
          
         this.getAutomation().maximizeWindow();
          
-        WebElement jQueryDemoLink = this.getAutomation().findElement(
+        WebElement backboneD3Link = this.getAutomation().findElement(
                 GenericAutomationRepository.SELECTOR_CHOICE.partialLinkText, 
                 "Backbone and D3");
-        jQueryDemoLink.click();
+        backboneD3Link.click();
 
        
 
