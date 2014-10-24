@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.selenium.generic;
+package com.dhenton9000.selenium.d3;
 
+import com.dhenton9000.selenium.generic.GenericAutomationRepository;
+import com.dhenton9000.selenium.generic.GenericTestBase;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
