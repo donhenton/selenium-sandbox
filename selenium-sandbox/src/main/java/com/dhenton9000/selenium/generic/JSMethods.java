@@ -74,6 +74,22 @@ public class JSMethods {
     }
 
     /**
+     * perform a left click for a D3 node, which doesn't respond to 
+     * WebElement click
+     * @param cssSelector valid cssSelector
+     * Note: d3 must be present
+     */
+    public void leftClickForD3(String cssSelector)
+    {
+        String template = "d3.selectAll('%s')"
+                + ".each("
+                + "function(d,i) { var f = d3.select(this).on(\"click\");  "
+                + "f.apply(this,[d],i)})";
+        String nodeClick = String.format(template,cssSelector);
+        getRepository().getJavascriptExecutor().executeScript(nodeClick);
+    }
+    
+    /**
      * perform a right click via javascript. Note that this is not a true
      * mouse action, only calling the code, therefore a simulation. providing
      * the location of the mouse click is the problem.
@@ -96,7 +112,7 @@ public class JSMethods {
                 + "false, false, false, 0, null, null); "
                 + "$(arguments[0])[0].dispatchEvent(sClick); ";
 
-        ((JavascriptExecutor) driver).executeScript(jsAction, cssSelector, xOffSet, yOffset);
+        getRepository().getJavascriptExecutor().executeScript(jsAction, cssSelector, xOffSet, yOffset);
 
     }
 

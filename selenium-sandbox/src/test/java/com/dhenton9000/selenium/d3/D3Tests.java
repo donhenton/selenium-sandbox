@@ -10,15 +10,12 @@ import com.dhenton9000.selenium.generic.GenericTestBase;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
 import com.dhenton9000.selenium.generic.JSMethods.ElementDimension;
-import java.util.ArrayList;
+import java.util.List;
 import org.junit.Ignore;
 /**
  *
@@ -48,22 +45,29 @@ public class D3Tests extends GenericTestBase {
         
     }
     
-    @Ignore
-    public void leftClickDemo()
+    @Test
+    public void d3LeftClickDemo()
     {
         
         gotoD3Page();
-        String template = "d3.selectAll('svg g[data-id=\"%d\"]')"
-                + ".each("
-                + "function(d,i) { var f = d3.select(this).on(\"click\");  "
-                + "f.apply(this,[d],i)})";
-        String nodeClick = String.format(template,4);
-        getAutomation().getJavascriptExecutor().executeScript(nodeClick);
         
+        List<WebElement> gElements = 
+                getAutomation().findElements(
+                        SELECTOR_CHOICE.cssSelector, "svg circle");
+        int startCount =gElements.size();
+        String selector = "svg g[data-id=\"4\"]";
+
+        this.getAutomation().getJsMethods().leftClickForD3(selector);
         
+        gElements = 
+                getAutomation().findElements(
+                        SELECTOR_CHOICE.cssSelector, "svg circle");
+        int endCount = gElements.size();
+        assertEquals(5,startCount);
+        assertTrue(endCount > startCount);
     }
     
-    @Test
+    @Ignore
     /**
      * note that this does not actually click on the point but needs to compute
      * the whole graph transform
