@@ -43,6 +43,7 @@ public class GenericAutomationRepository {
     private WaitMethods waitMethods;
     private JavascriptExecutor js;
     private LocalStorage localStorage;
+    private JSMethods jsMethods;
 
     /**
      * construct the repository from a config file, which will specify the
@@ -56,6 +57,7 @@ public class GenericAutomationRepository {
         configureDriver();
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
+        this.jsMethods = new JSMethods(this);
 
     }
 
@@ -96,6 +98,13 @@ public class GenericAutomationRepository {
             elements = new ArrayList<WebElement>();
         }
         return elements;
+    }
+
+    /**
+     * @return the jsMethods
+     */
+    public JSMethods getJsMethods() {
+        return jsMethods;
     }
 
     /**

@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
+import java.util.ArrayList;
 import org.junit.Ignore;
 /**
  *
@@ -62,10 +63,15 @@ public class D3Tests extends GenericTestBase {
     }
     
     @Test
-    public void testMouseDemo()
+    public void testContextMenu()
     {
-        String mouseMove = "var clickEvent = document.createEvent('MouseEvents'); "
-                + "clickEvent.initMouseEvent(............ )";
+          gotoD3Page();
+          String selector = "svg g[data-id=\"4\"]";
+          this.getAutomation().getJsMethods().contextMenu(selector, 4,4);
+          
+         
+          
+          
     }
     
      private void gotoD3Page() {
