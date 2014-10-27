@@ -5,18 +5,9 @@
  */
 package com.dhenton9000.selenium.generic;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +32,8 @@ public class JSMethods {
      * 
      * This will not work for d3 elements as it won't take into
      * account any transforms 
+     * 
+     * all selectors must use \" for strings
      * 
      * http://stackoverflow.com/questions/19154631/how-to-get-coordinates-of-an-svg-element
      * 
@@ -76,6 +69,9 @@ public class JSMethods {
     /**
      * perform a left click for a D3 node, which doesn't respond to 
      * WebElement click
+     * 
+     * all selectors must use \" for strings
+     * 
      * @param cssSelector valid cssSelector
      * Note: d3 must be present
      */
@@ -97,6 +93,9 @@ public class JSMethods {
      * The click position is relative to the window, so it is up to the calling
      * program to figure out how to position the call.
      * 
+     * all selectors must use \" for strings
+     * 
+     * 
      * require JQuery
      * 
      * @param cssSelector valid jquery selector
@@ -108,6 +107,19 @@ public class JSMethods {
         String jsAction
                 = "var sClick = document.createEvent('MouseEvents'); "
                 + "sClick.initMouseEvent('contextmenu', true, true, $(arguments[0])[0].defaultView, 1, "
+                + "arguments[1], arguments[2], arguments[1], arguments[2], "
+                + "false, false, false, 0, null, null); "
+                + "$(arguments[0])[0].dispatchEvent(sClick); ";
+
+        getRepository().getJavascriptExecutor().executeScript(jsAction, cssSelector, xOffSet, yOffset);
+
+    }
+    
+    public void mouseOver(String cssSelector, int xOffSet, int yOffset) {
+
+        String jsAction
+                = "var sClick = document.createEvent('MouseEvents'); "
+                + "sClick.initMouseEvent('mouseover', true, true, $(arguments[0])[0].defaultView, 1, "
                 + "arguments[1], arguments[2], arguments[1], arguments[2], "
                 + "false, false, false, 0, null, null); "
                 + "$(arguments[0])[0].dispatchEvent(sClick); ";

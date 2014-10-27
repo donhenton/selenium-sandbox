@@ -17,115 +17,128 @@ import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
 import com.dhenton9000.selenium.generic.JSMethods.ElementDimension;
 import java.util.List;
 import org.junit.Ignore;
+import org.openqa.selenium.NoSuchElementException;
+
 /**
  *
  * @author dhenton
  */
 public class D3Tests extends GenericTestBase {
-    
-    
+
     private static final Logger LOG = LoggerFactory.getLogger(D3Tests.class);
-    
-    public D3Tests()
-    {
+
+    public D3Tests() {
         /**
-         * window will stay open and driver not close
-         * if set to false
+         * window will stay open and driver not close if set to false
          */
-        this.setCloseDriver(false);
-        
+       // this.setCloseDriver(false);
+
     }
-    
+
     @Before
-    public void beforeTest()
-    {
-        assertNotNull(this.getAppspotRepository());
-        this.getAppspotRepository().initialNavigation();
-        
-        
+    public void beforeTest() {
+
     }
-    
+
     @Test
-    public void d3LeftClickDemo()
-    {
-        
+    public void testMouseMove() {
+
+        // using github project MouseEvent-sandbox
+        // server must be running
+        this.getAutomation().getDriver().get("http://localhost:8383/MouseEvent-sandbox/index.html");
+        String cssSelector = "div#hoverItem";
+        String testSelector = "div.tooltip";
+        boolean notThere = true;
+        try {
+            getAutomation().findElement(
+                    SELECTOR_CHOICE.cssSelector, testSelector);
+        } catch (NoSuchElementException err) {
+            notThere = false;
+        }
+
+        assertFalse(notThere);
+
+        ElementDimension dim
+                = this.getAutomation().getJsMethods().getElementDimensions(cssSelector);
+
+        this.getAutomation().getJsMethods().mouseOver(cssSelector, 10 + dim.left, 10 + dim.top);
+        WebElement w =   null;
+        try {
+           w =   getAutomation().findElement(
+                    SELECTOR_CHOICE.cssSelector, testSelector);
+           
+        } catch (NoSuchElementException err) {
+             
+        }
+        assertNotNull(w);
+    }
+
+    @Test
+    public void d3LeftClickDemo() {
+        this.getAppspotRepository().initialNavigation();
         gotoD3Page();
-        
-        List<WebElement> gElements = 
-                getAutomation().findElements(
+
+        List<WebElement> gElements
+                = getAutomation().findElements(
                         SELECTOR_CHOICE.cssSelector, "svg circle");
-        int startCount =gElements.size();
+        int startCount = gElements.size();
         String selector = "svg g[data-id=\"4\"]";
 
         this.getAutomation().getJsMethods().leftClickForD3(selector);
-        
-        gElements = 
-                getAutomation().findElements(
+
+        gElements
+                = getAutomation().findElements(
                         SELECTOR_CHOICE.cssSelector, "svg circle");
         int endCount = gElements.size();
-        assertEquals(5,startCount);
+        assertEquals(5, startCount);
         assertTrue(endCount > startCount);
     }
-    
-    @Ignore
+
+    @Test
     /**
      * note that this does not actually click on the point but needs to compute
      * the whole graph transform
      */
-    public void testContextMenu()
-    {
-          gotoD3Page();
-          String cssSelector = "svg g[data-id=\"4\"]";
-          int x=0,y=0; 
-          //check that custom menu is not visible
-          WebElement customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
-          assertFalse(customMenu.isDisplayed());
-          ElementDimension dim =
-          this.getAutomation().getJsMethods().getElementDimensions(cssSelector);
-          this.getAutomation().getJsMethods().contextMenu(cssSelector,x+dim.left,y+dim.top  );
-          customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
-          assertTrue(customMenu.isDisplayed());
-         
-          
-          
+    public void testContextMenu() {
+        this.getAppspotRepository().initialNavigation();
+        gotoD3Page();
+        String cssSelector = "svg g[data-id=\"4\"]";
+        int x = 0, y = 0;
+        //check that custom menu is not visible
+        WebElement customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
+        assertFalse(customMenu.isDisplayed());
+        ElementDimension dim
+                = this.getAutomation().getJsMethods().getElementDimensions(cssSelector);
+        this.getAutomation().getJsMethods().contextMenu(cssSelector, x + dim.left, y + dim.top);
+        customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
+        assertTrue(customMenu.isDisplayed());
+
     }
-    
-     private void gotoD3Page() {
-         
+
+    private void gotoD3Page() {
+
         this.getAutomation().maximizeWindow();
-         
+
         WebElement backboneD3Link = this.getAutomation().findElement(
-                GenericAutomationRepository.SELECTOR_CHOICE.partialLinkText, 
+                GenericAutomationRepository.SELECTOR_CHOICE.partialLinkText,
                 "Backbone and D3");
         backboneD3Link.click();
 
-       
-
         this.getAutomation().getWaitMethods().waitForElementToBeClickable(2,
                 SELECTOR_CHOICE.linkText, "D3 Demos");
-        
+
         WebElement d3Hover = getAutomation()
-                .findElement( SELECTOR_CHOICE.linkText, "D3 Demos");
-         
+                .findElement(SELECTOR_CHOICE.linkText, "D3 Demos");
+
         assertNotNull(d3Hover);
-        assertEquals("D3 Demos",d3Hover.getText());
+        assertEquals("D3 Demos", d3Hover.getText());
         this.getAutomation().hoverOn(d3Hover);
-        
+
         this.getAutomation().getWaitMethods().waitForElementToBeClickable(2,
-                SELECTOR_CHOICE.linkText, "Tree Demo"); 
-        
+                SELECTOR_CHOICE.linkText, "Tree Demo");
+
         this.getAutomation().findElement(
-                SELECTOR_CHOICE.linkText, "Tree Demo").click(); 
-        
+                SELECTOR_CHOICE.linkText, "Tree Demo").click();
+
     }
 }
-// to left click on a node
-//d3.selectAll('svg g[data-id="4"]').each(function(d,i) { var f = d3.select(this).on("click");  f.apply(this,[d],i)})
-
-
-//to get a context menu
-//var clickEvent = document.createEvent('MouseEvents');
-//clickEvent.initMouseEvent(............ )
-//d3.selectAll('svg g[data-id="4"]').dispatchEvent(clickEvent)
-
-//https://github.com/mbostock/d3/issues/100
