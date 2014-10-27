@@ -31,66 +31,73 @@ public class JSMethods {
     private final GenericAutomationRepository repository;
 
     public JSMethods(GenericAutomationRepository repos) {
-        this.repository = repos ;
+        this.repository = repos;
         this.driver = repos.getDriver();
     }
 
-    
-    
-    public void contextMenu(String cssSelector, int xOffset, int yOffset)
-    {
-        WebElement we = getRepository().findElement(
-                GenericAutomationRepository.SELECTOR_CHOICE.cssSelector, 
-                cssSelector);
-        xOffset += we.getLocation().x;
-        yOffset += we.getLocation().y;
-        
-        
-        String jsAction =              
-           "var sClick = document.createEvent('MouseEvents'); "
-           + "sClick.initMouseEvent('contextmenu', true, true, $(arguments[0])[0].defaultView, 1, "
-           + "arguments[1], arguments[2], arguments[1], arguments[2], "
-           + "false, false, false, 0, null, null); "
-           + "$(arguments[0])[0].dispatchEvent(sClick); ";
-
-        ((JavascriptExecutor) driver).executeScript(jsAction, cssSelector,xOffset,yOffset );
-        
-        
-    }        
-            
-    
-    
-    public void loadScriptFile(String pathToFile) throws IOException {
- 
-        String scriptBody = "";
-        String scriptRunner = "var demo_script = document.createElement(\"script\"); "
-                + "var demo_head = document.getElementsByTagName(\"head\")[0]; ";
-        scriptRunner += "$(demo_script).append("+scriptBody+"); demo_head.appendChild(demo_script);";
-       // scriptRunner += "$(demo_script).append("+scriptBody+"); head_demo.appendChild(script_demo)";
-        
-        LOG.debug(scriptRunner);
-        // give jQuery time to load asynchronously
-        getDriver().manage().timeouts().setScriptTimeout(10, TimeUnit.SECONDS);
-        JavascriptExecutor js = (JavascriptExecutor) getDriver();
-        js.executeScript(scriptRunner);
+    /**
+     * get the position of an object using jquery, may be different
+     * from the information provided by WebElement
+     * 
+     * This will not work for d3 elements as it won't take into
+     * account any transforms 
+     * 
+     * http://stackoverflow.com/questions/19154631/how-to-get-coordinates-of-an-svg-element
+     * 
+     * Note: requires JQuery present
+     * s
+     * @param cssSelector
+     * @return 
+     */
+    public ElementDimension getElementDimensions(String cssSelector) {
+        String dimensionFinder
+                = "return [$(arguments[0]).offset().left,$(arguments[0]).offset().top, "
+                + "$(arguments[0]).width(),$(arguments[0]).height()] ;";
+        ArrayList<Number> ret = (ArrayList<Number>) ((JavascriptExecutor) 
+                driver).executeScript(dimensionFinder, cssSelector);
+        return new ElementDimension(ret);
     }
 
-    private String readFileFromClassPath(String pathToFile) throws IOException {
-        Charset cs = Charset.forName("UTF-8");
-        LOG.debug("reading js file '"+pathToFile+"'");
-        InputStream stream = this.getClass().getClassLoader().getResourceAsStream(pathToFile);
-        try {
-            Reader reader = new BufferedReader(new InputStreamReader(stream, cs));
-            StringBuilder builder = new StringBuilder();
-            char[] buffer = new char[8192];
-            int read;
-            while ((read = reader.read(buffer, 0, buffer.length)) > 0) {
-                builder.append(buffer, 0, read);
-            }
-            return builder.toString();
-        } finally {
-            stream.close();
+    public class ElementDimension {
+
+        public int left;
+        public int top;
+        public int width;
+        public int height;
+
+        private ElementDimension(ArrayList<Number> ret) {
+            left = ret.get(0).intValue();
+            top = ret.get(1).intValue();
+            width = ret.get(2).intValue();
+            height = ret.get(3).intValue();
         }
+    }
+
+    /**
+     * perform a right click via javascript. Note that this is not a true
+     * mouse action, only calling the code, therefore a simulation. providing
+     * the location of the mouse click is the problem.
+     * 
+     * The click position is relative to the window, so it is up to the calling
+     * program to figure out how to position the call.
+     * 
+     * require JQuery
+     * 
+     * @param cssSelector valid jquery selector
+     * @param xOffSet arbitrary offset of the click
+     * @param yOffset arbitrary offset of the click
+     */
+    public void contextMenu(String cssSelector, int xOffSet, int yOffset) {
+
+        String jsAction
+                = "var sClick = document.createEvent('MouseEvents'); "
+                + "sClick.initMouseEvent('contextmenu', true, true, $(arguments[0])[0].defaultView, 1, "
+                + "arguments[1], arguments[2], arguments[1], arguments[2], "
+                + "false, false, false, 0, null, null); "
+                + "$(arguments[0])[0].dispatchEvent(sClick); ";
+
+        ((JavascriptExecutor) driver).executeScript(jsAction, cssSelector, xOffSet, yOffset);
+
     }
 
     /**

@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
+import com.dhenton9000.selenium.generic.JSMethods.ElementDimension;
 import java.util.ArrayList;
 import org.junit.Ignore;
 /**
@@ -63,12 +64,23 @@ public class D3Tests extends GenericTestBase {
     }
     
     @Test
+    /**
+     * note that this does not actually click on the point but needs to compute
+     * the whole graph transform
+     */
     public void testContextMenu()
     {
           gotoD3Page();
-          String selector = "svg g[data-id=\"4\"]";
-          this.getAutomation().getJsMethods().contextMenu(selector, 4,4);
-          
+          String cssSelector = "svg g[data-id=\"4\"]";
+          int x=0,y=0; 
+          //check that custom menu is not visible
+          WebElement customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
+          assertFalse(customMenu.isDisplayed());
+          ElementDimension dim =
+          this.getAutomation().getJsMethods().getElementDimensions(cssSelector);
+          this.getAutomation().getJsMethods().contextMenu(cssSelector,x+dim.left,y+dim.top  );
+          customMenu = getAutomation().findElement(SELECTOR_CHOICE.id, "my_custom_menu");
+          assertTrue(customMenu.isDisplayed());
          
           
           
