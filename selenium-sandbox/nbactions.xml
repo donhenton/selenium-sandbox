@@ -1,5 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <actions>
+    
+    <action>
+            <actionName>CUSTOM-target images</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath com.dhenton9000.screenshots.ScreenShotLauncher --action=target</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+    </action>
+    
+    <action>
+            <actionName>CUSTOM-source images</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath com.dhenton9000.screenshots.ScreenShotLauncher --action=source</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+    </action>
+    
+    
+    <action>
+            <actionName>CUSTOM-compare images</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath com.dhenton9000.screenshots.ScreenShotLauncher --action=compare</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+    </action>
+    
+    
     <action>
         <actionName>CUSTOM-surefire-report</actionName>
         <displayName>surefire-report</displayName>
@@ -32,6 +80,49 @@
             </goals>
             <properties>
                 <skipTests>true</skipTests>
+            </properties>
+        </action>
+    <action>
+            <actionName>run</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath ${packageClassName} --action=source</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+    <action>
+            <actionName>debug</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName} --action=source</exec.args>
+                <exec.executable>java</exec.executable>
+                <jpda.listen>true</jpda.listen>
+            </properties>
+        </action>
+    <action>
+            <actionName>profile</actionName>
+            <packagings>
+                <packaging>jar</packaging>
+            </packagings>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.2.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>-classpath %classpath ${packageClassName} --action=source</exec.args>
+                <exec.executable>java</exec.executable>
             </properties>
         </action>
          
