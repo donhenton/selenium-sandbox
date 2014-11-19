@@ -6,6 +6,7 @@
 package com.dhenton9000.selenium.generic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -128,6 +129,38 @@ public class JSMethods {
 
     }
 
+    /**
+     * send text and the <ENTER> key to a text box via javascript.
+     * Useful for triggering keydown, keypress events that look for the
+     * enter key. If these are inside a form and that code supresses the form
+     * submission, this method should honor that supression.
+     * 
+     * @param bodyText the text to enter
+     * @param event 'keydown' or 'keypress'
+     * @param cssSelector the selector for the input box, the selector should
+     * not contain single quotes
+     */
+    public void enterTextAndPressEnter(String bodyText, String event,String cssSelector)
+    {
+        String[] events = {"keypress","keydown"};
+        if (!Arrays.asList(events).contains(event))
+        {
+            throw new RuntimeException("event is not accepted '"+event+"' ");
+        }
+        
+        String jsAction = String.format("var targetSelector = $('%s'); ",cssSelector);
+        //send the body text to the input box
+        jsAction += String.format("targetSelector.val('%s'); ",bodyText);
+        //define the event 
+        jsAction += String.format("var e =$.Event('%s'); e.keyCode = 13 ",event);  
+        //trigger it
+        jsAction += "targetSelector.trigger(e); ";
+        
+        getRepository().getJavascriptExecutor().executeScript(jsAction);
+        
+        
+    }
+    
     /**
      * @return the driver
      */
