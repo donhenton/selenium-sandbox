@@ -221,7 +221,8 @@ public class FileDownloader {
     try {
       FileUtils.copyInputStreamToFile(fileToDownload.getEntity().getContent(), downloadedFile);
     } finally {
-      fileToDownload.getEntity().getContent().close();
+        if (fileToDownload.getEntity() != null)
+            fileToDownload.getEntity().getContent().close();
     }
 
     return downloadedFile;
