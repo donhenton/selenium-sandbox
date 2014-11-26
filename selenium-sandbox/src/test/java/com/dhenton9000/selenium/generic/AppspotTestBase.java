@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class GenericTestBase {
+public class AppspotTestBase {
 
     private   AppspotRepository appspotRepository = null;
-    private static final Logger LOG = LoggerFactory.getLogger(GenericTestBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AppspotTestBase.class);
     /**
      * if true then close driver after each test
      * in the @Before method, if set to false, then browser stays 
@@ -30,7 +30,7 @@ public class GenericTestBase {
      */
     private boolean closeDriver = true;
 
-    public GenericTestBase() {
+    public AppspotTestBase() {
         Configuration config = null;
         LOG.debug("using properties file");
         try {
@@ -43,7 +43,7 @@ public class GenericTestBase {
         appspotRepository = new AppspotRepository(config);
     }
 
-    public GenericTestBase(Configuration config) {
+    public AppspotTestBase(Configuration config) {
 
         appspotRepository = new AppspotRepository(config);
     }

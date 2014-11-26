@@ -1,20 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <description>selenium testing code</description>
     <groupId>com.dhenton9000.selenium.sandbox</groupId>
     <artifactId>selenium-sandbox</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>selenium-sandbox</name>
     <url>http://maven.apache.org</url>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <selenium.version>2.43.1</selenium.version>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -39,22 +36,19 @@
                         <version>2.16</version>
                         <configuration>
                             <includes>
-                                <include>/com/dhenton9000/selenium/generic/*Test.java</include>  
-                                 
+                                <include>/com/dhenton9000/selenium/generic/*Test.java</include>
                             </includes>
                         </configuration>
                     </plugin>
                 </plugins>
             </build>
         </profile>
-
     </profiles>
     <repositories>
         <repository>
             <id>java.net</id>
             <url>http://download.java.net/maven/2/</url>
         </repository>
-         
         <repository>
             <id>unknown-jars-temp-repo</id>
             <name>A temporary repository created by NetBeans for libraries and jars it could not identify. Please replace the dependencies in this repository with correct ones and delete this repository.</name>
@@ -65,7 +59,6 @@
             <url>http://repo1.maven.org/maven2/org/</url>
         </repository>
     </repositories>
-
     <reporting>
         <plugins>
             <plugin>
@@ -153,10 +146,7 @@
             </plugin>
         </plugins>
     </reporting>
-
-
     <dependencies>
-        
         <dependency>
             <groupId>com.dhenton9000.utils</groupId>
             <artifactId>XmlUtils</artifactId>
@@ -168,10 +158,10 @@
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-     <dependency>
-	<groupId>commons-cli</groupId>
-	<artifactId>commons-cli</artifactId>
-	<version>1.2</version>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>commons-configuration</groupId>
@@ -179,18 +169,16 @@
             <version>1.6</version>
             <type>jar</type>
         </dependency>
-    
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
-        </dependency> 
-    
-        <dependency>
+        </dependency>
+<!--        <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
             <version>${selenium.version}</version>
-        </dependency>  
+        </dependency>-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -205,14 +193,23 @@
                     <groupId>com.sun.jmx</groupId>
                     <artifactId>jmxri</artifactId>
                 </exclusion>
-
                 <exclusion>
                     <groupId>com.sun.jdmk</groupId>
                     <artifactId>jmxtools</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
-   
-
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>8.1.16.v20140903</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>8.1.16.v20140903</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

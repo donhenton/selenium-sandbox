@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class GenericSeleniumTests extends GenericTestBase {
+public class GenericSeleniumTests extends AppspotTestBase {
 
     private Logger LOG = LoggerFactory.getLogger(GenericSeleniumTests.class);
 

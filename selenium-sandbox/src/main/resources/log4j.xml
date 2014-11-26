@@ -35,7 +35,9 @@ zzzzzzzzzzzzzzzzzzzzzzz
             <param name="ConversionPattern" value="%d{ABSOLUTE} | %-5p  | %c | %4L | %m%n"/>
         </layout>
     </appender>
-
+<logger name="com.lazerycode.selenium" >
+       <level value="DEBUG"/>
+    </logger>
     <logger name="org.apache">
         <level value="ERROR"/>
     </logger>

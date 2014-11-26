@@ -6,7 +6,7 @@
 package com.dhenton9000.selenium.d3;
 
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
-import com.dhenton9000.selenium.generic.GenericTestBase;
+import com.dhenton9000.selenium.generic.AppspotTestBase;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +23,7 @@ import org.openqa.selenium.NoSuchElementException;
  *
  * @author dhenton
  */
-public class D3Tests extends GenericTestBase {
+public class D3Tests extends AppspotTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(D3Tests.class);
 
