@@ -17,41 +17,46 @@
 package com.lazerycode.selenium.filedownloader;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CheckFileHash {
 
-    private static final Logger LOG = Logger.getLogger(CheckFileHash.class);
-    private TypeOfHash typeOfOfHash = null;
-    private String expectedFileHash = null;
-    private File fileToCheck = null;
+    private static final Logger LOG = LoggerFactory.getLogger(CheckFileHash.class);
 
-    /**
-     * The File to perform a Hash check upon
-     *
-     * @param fileToCheck
-     * @throws FileNotFoundException
-     */
-    public void fileToCheck(File fileToCheck) throws FileNotFoundException {
-        if (!fileToCheck.exists()) throw new FileNotFoundException(fileToCheck + " does not exist!");
-
-        this.fileToCheck = fileToCheck;
+    public static String getFileHash(File fileToCheck, TypeOfHash typeOfHash) 
+            throws FileNotFoundException, IOException {
+         
+        String  actualFileHash = null;
+        switch (typeOfHash) {
+            case MD5:
+                actualFileHash = DigestUtils.md5Hex(new FileInputStream(fileToCheck));
+                 
+                break;
+            case SHA1:
+                actualFileHash = DigestUtils.shaHex(new FileInputStream(fileToCheck));
+                 
+                break;
+        }
+        
+        return  actualFileHash;
+        
+        
     }
+    private final TypeOfHash typeOfHash;
+    private final String expectedFileHash;
+    private final File fileToCheck;
 
-    /**
-     * Hash details used to perform the Hash check
-     *
-     * @param hash
-     * @param typeOfHash
-     */
-    public void hashDetails(String hash, TypeOfHash typeOfHash) {
-        this.expectedFileHash = hash;
-        this.typeOfOfHash = typeOfHash;
+    public CheckFileHash(File fileToCheck, String expectedFileHash, TypeOfHash typeOfHash) {
+        this.fileToCheck = fileToCheck;
+        this.expectedFileHash = expectedFileHash;
+        this.typeOfHash = typeOfHash;
+
     }
 
     /**
@@ -61,20 +66,32 @@ public class CheckFileHash {
      * @throws IOException
      */
     public boolean hasAValidHash() throws IOException {
-        if (this.fileToCheck == null) throw new FileNotFoundException("File to check has not been set!");
-        if (this.expectedFileHash == null || this.typeOfOfHash == null) throw new NullPointerException("Hash details have not been set!");
+        if (this.fileToCheck == null ) {
+            throw new FileNotFoundException("File to check has not been set!");
+        }
+        if (this.expectedFileHash == null || this.typeOfHash == null) {
+            throw new NullPointerException("Hash details have not been set!");
+        }
+        if (!this.fileToCheck.exists() ) {
+            throw new FileNotFoundException("File '"+fileToCheck.getCanonicalPath()+"' not found");
+        }
+        
 
         String actualFileHash = "";
         boolean isHashValid = false;
 
-        switch (this.typeOfOfHash) {
+        switch (this.typeOfHash) {
             case MD5:
                 actualFileHash = DigestUtils.md5Hex(new FileInputStream(this.fileToCheck));
-                if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
+                if (this.expectedFileHash.equals(actualFileHash)) {
+                    isHashValid = true;
+                }
                 break;
             case SHA1:
                 actualFileHash = DigestUtils.shaHex(new FileInputStream(this.fileToCheck));
-                if (this.expectedFileHash.equals(actualFileHash)) isHashValid = true;
+                if (this.expectedFileHash.equals(actualFileHash)) {
+                    isHashValid = true;
+                }
                 break;
         }
 

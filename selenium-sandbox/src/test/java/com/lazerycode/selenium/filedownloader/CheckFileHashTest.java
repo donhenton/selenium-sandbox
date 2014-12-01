@@ -22,11 +22,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 
-import static com.lazerycode.selenium.filedownloader.TypeOfHash.*;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
+import java.io.IOException;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class CheckFileHashTest {
@@ -42,48 +40,47 @@ public class CheckFileHashTest {
     }
     
     
-    @Test
-    public void checkValidMD5Hash() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("def3a66650822363f9e0ae6b9fbdbd6f", MD5);
-        assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    @Test(expected=FileNotFoundException.class)
+    public void testHashNeedsInput() throws IOException {
+        CheckFileHash checkHash = new CheckFileHash(null, null, null);
+        checkHash.hasAValidHash();
+    }
+
+    //File fileToCheck, String expectedFileHash, TypeOfHash typeOfHash
+    @Test(expected=FileNotFoundException.class)
+    public void testHashGetsNotFile() throws IOException {
+        File file = null;
+        String expectedHash = "x";
+        TypeOfHash hashType = TypeOfHash.MD5;
+        CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
+        checkHash.hasAValidHash();
+    }
+
+    @Test(expected=FileNotFoundException.class)
+    public void testHashGetsBadFile() throws IOException {
+        File file = new File("garbage");
+        String expectedHash = "x";
+        TypeOfHash hashType = TypeOfHash.MD5;
+        CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
+        checkHash.hasAValidHash();
     }
 
     @Test
-    public void checkValidSHA1Hash() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("638213e8a5290cd4d227d57459d92655e8fb1f17", SHA1);
-        assertThat(fileToCheck.hasAValidHash(), is(equalTo(true)));
+    public void testHashMismatch() throws  Exception {
+        File file =  new File(testFile.toURI());
+        String expectedHash = "x";
+        TypeOfHash hashType = TypeOfHash.MD5;
+        CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
+        assertFalse(checkHash.hasAValidHash());
     }
 
     @Test
-    public void checkInvalidMD5Hash() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("foo", MD5);
-        assertThat(fileToCheck.hasAValidHash(), is(equalTo(false)));
+    public void testHashMatch() throws  Exception {
+        File file =  new File(testFile.toURI());
+        String expectedHash = CheckFileHash.getFileHash(file,TypeOfHash.MD5);
+        TypeOfHash hashType = TypeOfHash.MD5;
+        CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
+        assertTrue(checkHash.hasAValidHash());
     }
-
-    @Test
-    public void checkInvalidSHA1Hash() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hashDetails("bar", SHA1);
-        assertThat(fileToCheck.hasAValidHash(), is(equalTo(false)));
-    }
-
-    @Test(expected = FileNotFoundException.class)
-    public void fileNotSet() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.hasAValidHash();
-    }
-
-    @Test(expected = NullPointerException.class)
-    public void hashDetailsNotSet() throws Exception {
-        CheckFileHash fileToCheck = new CheckFileHash();
-        fileToCheck.fileToCheck(new File(testFile.toURI()));
-        fileToCheck.hasAValidHash();
-    }
+    
 }
