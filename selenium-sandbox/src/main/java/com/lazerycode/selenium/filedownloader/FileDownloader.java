@@ -40,7 +40,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
-
+/**
+ * This class contains methods for downloading files from links. It cannot be
+ * reused.
+ * @author dhenton
+ */
 public class FileDownloader {
 
   private static final Logger LOG = LoggerFactory.getLogger(FileDownloader.class);
