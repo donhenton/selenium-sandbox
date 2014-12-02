@@ -10,6 +10,7 @@ package com.dhenton9000.selenium.generic;
  * @author dhenton
  */
 import com.dhenton9000.selenium.wicket.WicketBy;
+import com.dhenton9000.filedownloader.FileDownloader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -567,6 +568,15 @@ public class GenericAutomationRepository {
         String pageTitle = driver.getTitle();
         return pageTitle;
 
+    }
+    
+    /**
+     * return a file downloader instance which is not thread safe
+     * @return 
+     */
+    public FileDownloader getNewFileDownloader()
+    {
+        return new FileDownloader(this.getDriver());
     }
 
 }

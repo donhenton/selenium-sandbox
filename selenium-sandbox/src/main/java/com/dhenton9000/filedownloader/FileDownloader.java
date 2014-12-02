@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lazerycode.selenium.filedownloader;
+package com.dhenton9000.filedownloader;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponse;
@@ -34,6 +34,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -231,4 +232,24 @@ public class FileDownloader {
 
     return downloadedFile;
   }
+
+     /**
+     * convert a classpath reference to a file on the drive system
+     * @param path
+     * @return
+     * @throws URISyntaxException 
+     * @throws java.io.FileNotFoundException if the file at the path does
+     * not exist
+     */
+    public File convertClassPathToFileRef(String path)
+            throws URISyntaxException, FileNotFoundException {
+        URL testFile = this.getClass().getResource(path);
+        if (testFile != null)
+            return new File(testFile.toURI());
+        else
+        {
+            String info = String.format("unable to find file at '%s'", path);
+            throw new FileNotFoundException(info);
+        }
+    }
 }

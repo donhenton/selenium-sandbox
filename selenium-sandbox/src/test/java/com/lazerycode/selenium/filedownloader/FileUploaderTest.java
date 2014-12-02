@@ -5,6 +5,8 @@
  */
 package com.lazerycode.selenium.filedownloader;
 
+import com.dhenton9000.filedownloader.FileDownloader;
+import com.dhenton9000.filedownloader.RequestMethod;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import com.lazerycode.selenium.JettyServer;
 import java.io.File;

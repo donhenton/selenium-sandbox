@@ -16,6 +16,9 @@
 
 package com.lazerycode.selenium.filedownloader;
 
+import com.dhenton9000.filedownloader.CheckFileHash;
+import com.dhenton9000.filedownloader.FileDownloader;
+import com.dhenton9000.filedownloader.TypeOfHash;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,16 +29,19 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.openqa.selenium.WebDriver;
 
 public class CheckFileHashTest {
 
-    private final URL testFile = this.getClass().getResource("/web/download.zip");
+     private static final String GOOD_FILE_LOCATION = "/web/download.zip";
+   // private final URL testFile = this.getClass().getResource("/web/download.zip");
 
     @Test
     public void fileExists() throws Exception
     {
-        assertNotNull(testFile);
-        File f =new File(testFile.toURI());
+        File f = convertClassPathToFileRef(GOOD_FILE_LOCATION);
+        assertNotNull(f);
+        
         assertTrue(f.exists());
     }
     
@@ -67,7 +73,8 @@ public class CheckFileHashTest {
 
     @Test
     public void testHashMismatch() throws  Exception {
-        File file =  new File(testFile.toURI());
+        
+        File file   = convertClassPathToFileRef(GOOD_FILE_LOCATION);
         String expectedHash = "x";
         TypeOfHash hashType = TypeOfHash.MD5;
         CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
@@ -76,11 +83,16 @@ public class CheckFileHashTest {
 
     @Test
     public void testHashMatch() throws  Exception {
-        File file =  new File(testFile.toURI());
+         File file   = convertClassPathToFileRef(GOOD_FILE_LOCATION);
         String expectedHash = CheckFileHash.getFileHash(file,TypeOfHash.MD5);
         TypeOfHash hashType = TypeOfHash.MD5;
         CheckFileHash checkHash = new CheckFileHash(file, expectedHash, hashType);
         assertTrue(checkHash.hasAValidHash());
+    }
+    
+    
+    private File convertClassPathToFileRef(String path) throws  Exception {
+        return (new FileDownloader((WebDriver) null)).convertClassPathToFileRef(path);
     }
     
 }

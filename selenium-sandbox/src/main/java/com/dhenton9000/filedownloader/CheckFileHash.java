@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lazerycode.selenium.filedownloader;
+package com.dhenton9000.filedownloader;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
