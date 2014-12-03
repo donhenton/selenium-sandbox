@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
@@ -25,7 +26,8 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- *
+ * This class assumes sheets with a header line. There should be no
+ * cells in a column without a header
  * @author dhenton
  */
 public class ExcelParser extends DefaultHandler {
@@ -96,14 +98,12 @@ public class ExcelParser extends DefaultHandler {
         LOG.debug("sheet handler constructor");
 
     }
-    
-    
-     public SheetResults parse(InputStream inputStream) throws Exception {
+
+    public SheetResults parse(InputStream inputStream) throws Exception {
 
         OPCPackage pkg = OPCPackage.open(inputStream);
         XSSFReader reader = new XSSFReader(pkg);
         this.sst = reader.getSharedStringsTable();
-         
 
         SAXParserFactory saxFactory = SAXParserFactory.newInstance();
         SAXParser saxParser = saxFactory.newSAXParser();
@@ -118,11 +118,9 @@ public class ExcelParser extends DefaultHandler {
         parser.parse(sheetSource);
         sheet.close();
 
-        return  getSheetResults();
+        return getSheetResults();
 
     }
-    
-    
 
     @Override
     public void endDocument() throws SAXException {
@@ -242,15 +240,15 @@ public class ExcelParser extends DefaultHandler {
         if (this.sheetResults == null) {
             sheetResults = new SheetResults();
             // handle headers
-            for (String k: headerIndexMap.keySet())
-            {
-                 this.sheetResults.getHeaders().add(k);
-            
+            for (String k : headerIndexMap.keySet()) {
+                if (!StringUtils.isBlank(k)) {
+                    this.sheetResults.getHeaders().add(k);
+                }
+
             }
-            
+
             //handle rows
             if (accumulatedRows.size() > 0) {
-                
 
                 for (Map<String, Object> row : accumulatedRows) {
                     HashMap<String, Object> rowCopy = new HashMap<String, Object>();
