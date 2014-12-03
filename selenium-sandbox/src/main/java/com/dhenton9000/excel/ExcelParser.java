@@ -238,23 +238,28 @@ public class ExcelParser extends DefaultHandler {
         cellContents.append(ch, start, length);
     }
 
-    SheetResults getSheetResults() {
+    public SheetResults getSheetResults() {
         if (this.sheetResults == null) {
             sheetResults = new SheetResults();
-
-            Map<String, Object> sample = accumulatedRows.get(0);
-            for (String key : sample.keySet()) {
-                this.sheetResults.getHeaders().add(key);
-
+            // handle headers
+            for (String k: headerIndexMap.keySet())
+            {
+                 this.sheetResults.getHeaders().add(k);
+            
             }
+            
+            //handle rows
+            if (accumulatedRows.size() > 0) {
+                
 
-            for (Map<String, Object> row : accumulatedRows) {
-                HashMap<String, Object> rowCopy = new HashMap<String, Object>();
-                for (String key : row.keySet()) {
-                    Object item = row.get(key);
-                    rowCopy.put(key, item);
+                for (Map<String, Object> row : accumulatedRows) {
+                    HashMap<String, Object> rowCopy = new HashMap<String, Object>();
+                    for (String key : row.keySet()) {
+                        Object item = row.get(key);
+                        rowCopy.put(key, item);
+                    }
+                    this.sheetResults.getRows().add(rowCopy);
                 }
-                this.sheetResults.getRows().add(rowCopy);
             }
         }
         return this.sheetResults;
