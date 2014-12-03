@@ -237,15 +237,15 @@ public class FileDownloader {
      * convert a classpath reference to a file on the drive system
      * @param path
      * @return
-     * @throws URISyntaxException 
      * @throws java.io.FileNotFoundException if the file at the path does
      * not exist
      */
     public File convertClassPathToFileRef(String path)
-            throws URISyntaxException, FileNotFoundException {
-        URL testFile = this.getClass().getResource(path);
-        if (testFile != null)
-            return new File(testFile.toURI());
+            throws  FileNotFoundException {
+              
+        if (this.getClass().getResource(path) != null)
+            
+            return new File(FileUtils.toFile(getClass().getResource(path)).getAbsolutePath());
         else
         {
             String info = String.format("unable to find file at '%s'", path);
