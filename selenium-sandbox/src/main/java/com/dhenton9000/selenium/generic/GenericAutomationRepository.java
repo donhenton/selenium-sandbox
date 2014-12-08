@@ -32,8 +32,10 @@ import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.html5.LocalStorage;
 
 public class GenericAutomationRepository {
@@ -45,6 +47,7 @@ public class GenericAutomationRepository {
     private JavascriptExecutor js;
     private LocalStorage localStorage;
     private JSMethods jsMethods;
+    private final String tempDownloadPath ;
 
     /**
      * construct the repository from a config file, which will specify the
@@ -59,6 +62,7 @@ public class GenericAutomationRepository {
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
         this.jsMethods = new JSMethods(this);
+        this.tempDownloadPath = FileUtils.getTempDirectoryPath();
 
     }
 
@@ -73,6 +77,7 @@ public class GenericAutomationRepository {
         this.config = config;
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
+        this.tempDownloadPath = FileUtils.getTempDirectoryPath();
     }
 
     public WaitMethods getWaitMethods() {
@@ -106,6 +111,16 @@ public class GenericAutomationRepository {
      */
     public JSMethods getJsMethods() {
         return jsMethods;
+    }
+
+    /**
+     * this is the folder where requested downloads will appear.
+     * currently for csv and xcel files
+     * @return the tempDownloadPath, it has a trailing slash
+     */
+    public String getTempDownloadPath() {
+        
+        return tempDownloadPath;
     }
 
     /**
@@ -155,6 +170,22 @@ public class GenericAutomationRepository {
             default:
                  DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
                  desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+                 
+                 // sets the driver to automatically skip download dialog
+                 // and save csv,xcel files to a temp directory
+                 // that directory is set in the constructor and has a trailing
+                 // slash
+                FirefoxProfile firefoxProfile = new FirefoxProfile();
+                firefoxProfile.setPreference("browser.download.folderList", 2);
+                firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
+                
+                String target = this.getTempDownloadPath();
+                firefoxProfile.setPreference("browser.download.dir", target);
+                firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/vnd.ms-excel");
+
+                desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile); 
+                 
+                 
                 LOG.debug("creating firefox driver");
                  driver = new FirefoxDriver(desiredCapabilities);
                 LOG.debug("got firefox driver");
