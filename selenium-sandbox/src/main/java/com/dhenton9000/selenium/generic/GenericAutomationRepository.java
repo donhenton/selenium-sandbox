@@ -47,7 +47,7 @@ public class GenericAutomationRepository {
     private JavascriptExecutor js;
     private LocalStorage localStorage;
     private JSMethods jsMethods;
-    private final String tempDownloadPath ;
+    private String tempDownloadPath;
 
     /**
      * construct the repository from a config file, which will specify the
@@ -62,7 +62,6 @@ public class GenericAutomationRepository {
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
         this.jsMethods = new JSMethods(this);
-        this.tempDownloadPath = FileUtils.getTempDirectoryPath();
 
     }
 
@@ -77,7 +76,7 @@ public class GenericAutomationRepository {
         this.config = config;
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
-        this.tempDownloadPath = FileUtils.getTempDirectoryPath();
+
     }
 
     public WaitMethods getWaitMethods() {
@@ -114,12 +113,16 @@ public class GenericAutomationRepository {
     }
 
     /**
-     * this is the folder where requested downloads will appear.
-     * currently for csv and xcel files
+     * this is the folder where requested downloads will appear. currently for
+     * csv and xcel files
+     *
      * @return the tempDownloadPath, it has a trailing slash
      */
     public String getTempDownloadPath() {
-        
+
+        if (tempDownloadPath == null) {
+            tempDownloadPath = FileUtils.getTempDirectoryPath();
+        }
         return tempDownloadPath;
     }
 
@@ -128,6 +131,7 @@ public class GenericAutomationRepository {
      * 'cssSelector'
      */
     public enum SELECTOR_CHOICE {
+
         id, name, className, linkText,
         xpath, tagName, cssSelector,
         partialLinkText, wicketPathMatch, wicketPathContains
@@ -137,6 +141,7 @@ public class GenericAutomationRepository {
      * driver types currently only firefox supported
      */
     public enum DRIVER_TYPES {
+
         FireFox, InternetExplorer, Opera, Safari, Chrome;
     }
 
@@ -168,26 +173,25 @@ public class GenericAutomationRepository {
         switch (driverType) {
             case FireFox:
             default:
-                 DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-                 desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
-                 
+                DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+                desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+
                  // sets the driver to automatically skip download dialog
-                 // and save csv,xcel files to a temp directory
-                 // that directory is set in the constructor and has a trailing
-                 // slash
+                // and save csv,xcel files to a temp directory
+                // that directory is set in the constructor and has a trailing
+                // slash
                 FirefoxProfile firefoxProfile = new FirefoxProfile();
                 firefoxProfile.setPreference("browser.download.folderList", 2);
                 firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-                
+
                 String target = this.getTempDownloadPath();
                 firefoxProfile.setPreference("browser.download.dir", target);
                 firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/vnd.ms-excel");
 
-                desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile); 
-                 
-                 
+                desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
+
                 LOG.debug("creating firefox driver");
-                 driver = new FirefoxDriver(desiredCapabilities);
+                driver = new FirefoxDriver(desiredCapabilities);
                 LOG.debug("got firefox driver");
                 break;
             case InternetExplorer:
@@ -198,7 +202,7 @@ public class GenericAutomationRepository {
                 break;
             case Chrome:
                 break;
-            
+
         }
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         LOG.debug("driver is loaded via config " + driver.toString());
@@ -216,8 +220,7 @@ public class GenericAutomationRepository {
         return js;
     }
 
-    public LocalStorage getLocalStorage()
-    {
+    public LocalStorage getLocalStorage() {
         if (localStorage == null) {
             localStorage = (LocalStorage) driver;
         }
@@ -344,8 +347,7 @@ public class GenericAutomationRepository {
     public void hoverOn(WebElement e) {
         Actions builder = new Actions(driver);
         builder.moveToElement(e).build().perform();
-        
-        
+
     }
 
     /**
@@ -376,18 +378,19 @@ public class GenericAutomationRepository {
         enterText(selectorChoice, selectorValue, numberAsText);
 
     }
-    
-     public void scrollElementIntoView(WebElement element) {
-       ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+    public void scrollElementIntoView(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
 
     }
+
     public void scrollElementIntoView(String cssSelector) {
-        String exScript = "$('"+cssSelector+"')[0].scrollIntoView(true)";
+        String exScript = "$('" + cssSelector + "')[0].scrollIntoView(true)";
         ((JavascriptExecutor) driver).executeScript(exScript);
         try {
             Thread.sleep(500);
         } catch (InterruptedException ex) {
-            
+
         }
     }
 
@@ -402,7 +405,7 @@ public class GenericAutomationRepository {
         Select dropdown = new Select(driver.findElement(selectionBy));
         return dropdown.getOptions();
     }
-    
+
     /**
      * Is the option with the given text found in the dropbox?
      *
@@ -412,19 +415,19 @@ public class GenericAutomationRepository {
      * @return
      */
     public boolean isOptionTextPresentForDropdown(SELECTOR_CHOICE selectorChoice, String selectorValue, String textToFind) {
-       List<WebElement> elems =  getListOfOptionsForDropdown(selectorChoice,  selectorValue);
-       boolean foundIt = false;
+        List<WebElement> elems = getListOfOptionsForDropdown(selectorChoice, selectorValue);
+        boolean foundIt = false;
         if (elems != null & !elems.isEmpty()) {
             for (WebElement e : elems) {
                 if (e.getText().equals(textToFind)) {
-                   foundIt = true;
-                   break;
-               }
-           }
-       }
-       return foundIt;
+                    foundIt = true;
+                    break;
+                }
+            }
+        }
+        return foundIt;
     }
-    
+
     /**
      * return the text of the first selected option for a dropdown or null if
      * not found
@@ -454,7 +457,7 @@ public class GenericAutomationRepository {
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         dropdown.selectByVisibleText(optionText);
-        
+
     }
 
     /**
@@ -469,9 +472,9 @@ public class GenericAutomationRepository {
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         dropdown.selectByValue(value);
-        
+
     }
-    
+
     /**
      * select a dropdown item by index
      *
@@ -484,9 +487,9 @@ public class GenericAutomationRepository {
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
         Select dropdown = new Select(driver.findElement(selectionBy));
         dropdown.selectByIndex(index);
-        
+
     }
-    
+
     /**
      * get the text of a web element
      *
@@ -523,7 +526,6 @@ public class GenericAutomationRepository {
      * @param selectorValue the value to select by eg. '.myStyleClass'
      * @return true if visible
      */
-
     public boolean verifyElementIsVisible(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -537,7 +539,6 @@ public class GenericAutomationRepository {
      * @param selectorValue the value to select by eg. '.myStyleClass'
      * @return true if visible
      */
-
     public boolean verifyElementIsEnabled(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -564,7 +565,6 @@ public class GenericAutomationRepository {
      * @param selectorValue the value to select by eg. '.myStyleClass'
      * @return
      */
-
     public WebElement findElement(SELECTOR_CHOICE selectorChoice, String selectorValue) {
 
         By selectionBy = generateSelectorBy(selectorChoice, selectorValue);
@@ -600,13 +600,13 @@ public class GenericAutomationRepository {
         return pageTitle;
 
     }
-    
+
     /**
      * return a file downloader instance which is not thread safe
-     * @return 
+     *
+     * @return
      */
-    public FileDownloader getNewFileDownloader()
-    {
+    public FileDownloader getNewFileDownloader() {
         return new FileDownloader(this.getDriver());
     }
 
