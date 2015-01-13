@@ -78,6 +78,10 @@ public class PhantomJSTest {
         this.getAutomation().getDriver().close();
     }
 
+    
+    // ghost driver tests
+    // https://github.com/detro/ghostdriver/blob/master/test/java/src/test/java/ghostdriver/FileUploadTest.java
+    
     @Test
     public void testPhantomSetup() {
 
