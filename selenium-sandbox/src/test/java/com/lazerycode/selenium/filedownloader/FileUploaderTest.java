@@ -65,7 +65,7 @@ public class FileUploaderTest {
 
     @BeforeClass
     public static void start() throws Exception {
-        localWebServer = new JettyServer(webServerPort);
+        localWebServer = new JettyServer(webServerPort,"/web");
         downloadURI200 = new URI(webServerURL + ":" + webServerPort + "/downloadTest.html");
         downloadURI404 = new URI(webServerURL + ":" + webServerPort + "/doesNotExist.html");
 

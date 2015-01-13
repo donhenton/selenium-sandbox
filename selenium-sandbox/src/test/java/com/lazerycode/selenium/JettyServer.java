@@ -23,8 +23,15 @@ public class JettyServer {
 
     private Server jettyServer;
 
-    public JettyServer(int port) throws Exception {
-        String resourceBasePath = this.getClass().getResource("/web").toExternalForm();
+    /**
+     * 
+     * @param port the port for the web server
+     * @param resourceLocation the resource location starting with a '/' eg
+     * '/web'
+     * @throws Exception 
+     */
+    public JettyServer(int port,String resourceLocation) throws Exception {
+        String resourceBasePath = this.getClass().getResource(resourceLocation).toExternalForm();
         jettyServer = new Server(port);
         WebAppContext webApplication = new WebAppContext();
         webApplication.setResourceBase(resourceBasePath);

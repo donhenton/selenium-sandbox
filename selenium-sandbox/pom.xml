@@ -147,6 +147,17 @@
         </plugins>
     </reporting>
     <dependencies>
+        <!-- https://github.com/detro/ghostdriver/ 
+        http://phantomjs.org/download.html
+        -->
+        <dependency>
+            <groupId>com.github.detro</groupId>
+            <artifactId>phantomjsdriver</artifactId>
+            <version>1.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        
+        
         <dependency>
             <groupId>com.dhenton9000.utils</groupId>
             <artifactId>XmlUtils</artifactId>
