@@ -600,6 +600,24 @@ public class GenericAutomationRepository {
         return pageTitle;
 
     }
+    
+    
+    /**
+     * Determines visibility of an element in a window.
+     * @param w
+     * @return true if the element is in the window, false if not
+     */
+    public boolean isElementScrolledIntoView(WebElement w) {
+
+        if (w == null) {
+            return false;
+        }
+        Point p = w.getLocation();
+        Dimension d =  getDriver().manage().window().getSize();
+        java.awt.Rectangle r = new java.awt.Rectangle(d.getWidth(), d.getHeight());
+        java.awt.Point awtPoint = new java.awt.Point(p.x, p.y);
+        return r.contains(awtPoint);
+    }
 
     /**
      * return a file downloader instance which is not thread safe
