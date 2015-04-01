@@ -3,92 +3,80 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.embedded.jetty;
+package com.dhenton9000.phantom.js;
 
+import com.dhenton9000.embedded.jetty.JettyServer;
+import com.dhenton9000.phantom.js.PhantomJSTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.io.IOException;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
-import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.openqa.selenium.browserlaunches.Proxies;
 
 /**
  *
  * @author dhenton
  */
-public class PhantomJSTest {
+public class PhantomJSBase {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(PhantomJSTest.class);
-    private static JettyServer localWebServer;
-    private static final int PORT = 4444;
-    private static final String CONTEXT_PATH = "/app";
-    private static final String APP_URL = "http://localhost:"
-            + PORT + CONTEXT_PATH;
-    private static String downloadURI200;
 
-    private PropertiesConfiguration config;
+    private final PropertiesConfiguration config;
     private WebDriver driver = null;
     private GenericAutomationRepository automation = null;
+    private static JettyServer localWebServer;
+    private static int port;
+    private static String appContext;
 
-    @BeforeClass
-    public static void start() throws Exception {
-        localWebServer = new JettyServer(PORT, CONTEXT_PATH);
-        downloadURI200 = APP_URL + "/phantom.jsp";
-
-    }
-
-    public PhantomJSTest() {
-
+    public PhantomJSBase(int portNumber, String appContextStr) {
+        port = portNumber;
+        appContext = appContextStr;
         LOG.debug("using properties file");
         try {
             config = new PropertiesConfiguration("env.properties");
             LOG.debug("reading config in " + this.getClass().getName());
-            driver = configureDriver(config);
+            driver = configureDriver(getConfig());
 
-            this.automation = new GenericAutomationRepository(driver, config);
+            this.automation = new GenericAutomationRepository(driver, getConfig());
         } catch (ConfigurationException | IOException ex) {
             throw new RuntimeException(ex);
 
         }
+
+    }
+
+    /**
+     * @return the localWebServer
+     */
+    public static JettyServer getLocalWebServer() {
+        return localWebServer;
+    }
+
+    protected static void stopServer() throws Exception {
+        localWebServer.stopJettyServer();
+    }
+
+    protected static void initServer( String resourceBase) throws Exception {
+
+        localWebServer = new JettyServer(port, appContext,resourceBase);
+        
     }
 
     public GenericAutomationRepository getAutomation() {
         return automation;
     }
 
-    @AfterClass
-    public static void stop() throws Exception {
-        localWebServer.stopJettyServer();
+    public static String composeURL(String item) {
+        return "http://localhost:" + getPort() + getAppContext() + item;
     }
 
-    @After
-    public void closeWebDriver() {
-        this.getAutomation().getDriver().close();
-    }
-
-    // ghost driver tests
-    // https://github.com/detro/ghostdriver/blob/master/test/java/src/test/java/ghostdriver/FileUploadTest.java
-    @Test
-    public void testPhantomSetup() {
-
-        this.getAutomation().getDriver().get(downloadURI200);
-
-        assertEquals("Phantom Page", this.getAutomation().getPageTitle());
-
-    }
-
-    public final WebDriver configureDriver(PropertiesConfiguration sConfig)
+    protected final WebDriver configureDriver(PropertiesConfiguration sConfig)
             throws IOException {
         DesiredCapabilities sCaps = new DesiredCapabilities();
         sCaps.setJavascriptEnabled(true);
@@ -113,6 +101,27 @@ public class PhantomJSTest {
 
         return mDriver;
 
+    }
+
+    /**
+     * @return the config
+     */
+    public final PropertiesConfiguration getConfig() {
+        return config;
+    }
+
+    /**
+     * @return the port
+     */
+    public static int getPort() {
+        return port;
+    }
+
+    /**
+     * @return the appContext
+     */
+    public static String getAppContext() {
+        return appContext;
     }
 
 }

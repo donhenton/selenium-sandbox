@@ -33,7 +33,7 @@ import org.openqa.selenium.WebDriver;
 
 public class CheckFileHashTest {
 
-     private static final String GOOD_FILE_LOCATION = "/web/download.zip";
+     private static final String GOOD_FILE_LOCATION = "/excel/workbook_test.xlsx";
    // private final URL testFile = this.getClass().getResource("/web/download.zip");
 
     @Test
