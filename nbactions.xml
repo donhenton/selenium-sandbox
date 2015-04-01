@@ -79,7 +79,7 @@
                 <goal>site:site</goal>
             </goals>
             <properties>
-                <skipTests>true</skipTests>
+                <skipTests>false</skipTests>
             </properties>
         </action>
     <action>
@@ -123,6 +123,17 @@
             <properties>
                 <exec.args>-classpath %classpath ${packageClassName} --action=source</exec.args>
                 <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+    <action>
+            <actionName>CUSTOM-coverage report</actionName>
+            <displayName>coverage report</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>verify</goal>
+            </goals>
+            <properties>
+                <skipTests>false</skipTests>
             </properties>
         </action>
          

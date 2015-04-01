@@ -55,6 +55,7 @@ public class AppspotRepository {
             throw new RuntimeException("must specify 'test.env.url' in env.properties");
         }
         this.getAutomation().getDriver().get(url);
+        getAutomation().maximizeWindow();
         getAutomation().getWaitMethods().waitForExpectedElement(2, SELECTOR_CHOICE.id, "menu");
         getAutomation().getWaitMethods().waitForDuration(3);
 
