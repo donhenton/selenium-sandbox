@@ -9,6 +9,7 @@ import com.dhenton9000.phantom.js.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ public class JSInjectTest extends PhantomJSBase {
 
     @BeforeClass
     public static void start() throws Exception {
-        
 
     }
 
@@ -41,28 +41,48 @@ public class JSInjectTest extends PhantomJSBase {
     }
 
     public JSInjectTest() throws Exception {
-        
+
         super(PORT, CONTEXT_PATH);
         initServer("src/test/resources/jsinject");
-        downloadURI200 = composeURL("/phantom.jsp");
+        downloadURI200 = composeURL("/");
         LOG.debug("url '" + downloadURI200 + "'");
-     
+        this.getAutomation().getDriver().get(downloadURI200);
+        String runScript = "var s=window.document.createElement('script'); "
+                + "s.src='qa_scripts/test.js';  "
+                + "window.document.head.appendChild(s);";
+
+        this.getAutomation().getJavascriptExecutor().executeScript(runScript);
     }
 
     @After
     public void closeWebDriver() {
         this.getAutomation().getDriver().close();
-        
+
     }
 
-    // ghost driver tests
-    // https://github.com/detro/ghostdriver/blob/master/test/java/src/test/java/ghostdriver/FileUploadTest.java
     @Test
     public void testPhantomSetup() {
 
-        this.getAutomation().getDriver().get(downloadURI200);
+        assertEquals("Javascript Inject Page", this.getAutomation().getPageTitle());
 
-        assertEquals("Javascript", this.getAutomation().getPageTitle());
+    }
+
+    @Test
+    public void testInjection() {
+
+        String t = (String) this.getAutomation().getJavascriptExecutor().executeScript("return testFunction('bonzo')");
+
+        assertTrue(t.contains("get a job, bonzo!"));
+
+    }
+
+    @Test
+    public void testJQueryAvailable() {
+        
+
+        String t = (String) this.getAutomation().getJavascriptExecutor().executeScript("return testJQuery('#test')");
+
+        assertEquals(t,"Get a job");
 
     }
 

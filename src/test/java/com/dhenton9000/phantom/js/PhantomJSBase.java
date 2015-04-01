@@ -30,11 +30,12 @@ public class PhantomJSBase {
     private final PropertiesConfiguration config;
     private WebDriver driver = null;
     private GenericAutomationRepository automation = null;
-    private static JettyServer localWebServer;
+    private static JettyServer localWebServer = null;
     private static int port;
     private static String appContext;
 
     public PhantomJSBase(int portNumber, String appContextStr) {
+        
         port = portNumber;
         appContext = appContextStr;
         LOG.debug("using properties file");
@@ -48,7 +49,6 @@ public class PhantomJSBase {
             throw new RuntimeException(ex);
 
         }
-
     }
 
     /**
@@ -63,7 +63,7 @@ public class PhantomJSBase {
     }
 
     protected static void initServer( String resourceBase) throws Exception {
-
+        if (localWebServer == null)
         localWebServer = new JettyServer(port, appContext,resourceBase);
         
     }
