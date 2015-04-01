@@ -1,8 +1,17 @@
 /*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.dhenton9000.selenium.generic;
+
+ 
+
+
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.selenium.sandbox.wicketapp;
 
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
@@ -22,9 +31,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class BaseSeleniumWicketTest {
+public class BaseTest {
 
-    private final Logger logger = LoggerFactory.getLogger(BaseSeleniumWicketTest.class);
+    private final Logger logger = LoggerFactory.getLogger(BaseTest.class);
 
     public void mouseOverElement(WebElement element, WebDriver driver) {
 

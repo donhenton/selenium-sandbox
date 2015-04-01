@@ -4,7 +4,8 @@
  */
 package com.dhenton9000.selenium.sandbox.jquery;
 
-import com.dhenton9000.selenium.sandbox.wicketapp.BaseSeleniumWicketTest;
+ 
+import com.dhenton9000.selenium.generic.BaseTest;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import com.thoughtworks.selenium.Selenium;
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Don
  */
-public class JQueryTest extends BaseSeleniumWicketTest {
+public class JQueryTest  extends BaseTest {
     public static final String HTML_FILE = "selenium3.html";
 
     private static JavascriptExecutor js;
