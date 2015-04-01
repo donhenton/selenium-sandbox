@@ -5,10 +5,10 @@
  */
 package com.lazerycode.selenium.filedownloader;
 
+import com.dhenton9000.embedded.jetty.JettyServer;
 import com.dhenton9000.filedownloader.FileDownloader;
 import com.dhenton9000.filedownloader.RequestMethod;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
-import com.lazerycode.selenium.JettyServer;
 import java.io.File;
 import java.net.URI;
 import org.apache.commons.configuration.Configuration;
@@ -44,6 +44,8 @@ public class FileUploaderTest {
     private WebDriver driver;
     private static URI downloadURI200;
     private static URI downloadURI404;
+    private static String appContext;
+    private static   String destURL = webServerURL + ":" + webServerPort ;
 
     public FileUploaderTest() {
         LOG.debug("using properties file");
@@ -65,9 +67,11 @@ public class FileUploaderTest {
 
     @BeforeClass
     public static void start() throws Exception {
-        localWebServer = new JettyServer(webServerPort,"/web");
-        downloadURI200 = new URI(webServerURL + ":" + webServerPort + "/downloadTest.html");
-        downloadURI404 = new URI(webServerURL + ":" + webServerPort + "/doesNotExist.html");
+        appContext = "/web";
+        localWebServer = new JettyServer(webServerPort,appContext);
+        downloadURI200 = new URI(webServerURL + ":" + webServerPort + appContext+"/downloadTest.html");
+        downloadURI404 = new URI(webServerURL + ":" + webServerPort + appContext+"/doesNotExist.html");
+        destURL += appContext;
 
     }
 
@@ -84,7 +88,7 @@ public class FileUploaderTest {
     @Test
     public void testJettySetup() {
 
-        this.getAutomation().getDriver().get(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        this.getAutomation().getDriver().get(destURL + "/downloadTest.html");
         WebElement w = this.getAutomation().findElement(
                 GenericAutomationRepository.SELECTOR_CHOICE.id,
                 "fileToDownload");
@@ -95,7 +99,7 @@ public class FileUploaderTest {
     @Test
     public void statusCode200FromString() throws Exception {
         FileDownloader downloadHandler = new FileDownloader(driver);
-        downloadHandler.setURI(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        downloadHandler.setURI(destURL + "/downloadTest.html");
         downloadHandler.setHTTPRequestMethod(RequestMethod.GET);
         assertThat(downloadHandler.getLinkHTTPStatus(), is(equalTo(200)));
     }
@@ -103,7 +107,7 @@ public class FileUploaderTest {
     @Test
     public void statusCode404FromString() throws Exception {
         FileDownloader downloadHandler = new FileDownloader(driver);
-        downloadHandler.setURI(webServerURL + ":" + webServerPort + "/doesNotExist.html");
+        downloadHandler.setURI(destURL+ "/doesNotExist.html");
         downloadHandler.setHTTPRequestMethod(RequestMethod.GET);
         assertThat(downloadHandler.getLinkHTTPStatus(), is(equalTo(404)));
     }
@@ -199,7 +203,7 @@ public class FileUploaderTest {
     @Test
     public void downloadAFile() throws Exception {
         FileDownloader downloadHandler = new FileDownloader(driver);
-        driver.get(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        driver.get(destURL+ "/downloadTest.html");
         WebElement downloadLink = driver.findElement(By.id("fileToDownload"));
         downloadHandler.setURISpecifiedInAnchorElement(downloadLink);
         File downloadedFile = downloadHandler.downloadFile();
@@ -211,7 +215,7 @@ public class FileUploaderTest {
     @Test
     public void downloadAnImage() throws Exception {
         FileDownloader downloadHandler = new FileDownloader(driver);
-        driver.get(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        driver.get(destURL + "/downloadTest.html");
         WebElement image = driver.findElement(By.id("ebselenImage"));
         downloadHandler.setURISpecifiedInImageElement(image);
         File downloadedFile = downloadHandler.downloadFile();
@@ -224,7 +228,7 @@ public class FileUploaderTest {
     public void downloadAFileFollowingRedirects() throws Exception {
         //TODO modify test page to set a redirect to file download
         FileDownloader downloadHandler = new FileDownloader(driver);
-        driver.get(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        driver.get(destURL + "/downloadTest.html");
         WebElement downloadLink = driver.findElement(By.id("fileToDownload"));
         downloadHandler.setURISpecifiedInAnchorElement(downloadLink);
         downloadHandler.followRedirectsWhenDownloading(true);
@@ -238,7 +242,7 @@ public class FileUploaderTest {
     public void downloadAFileWhilstMimicingSeleniumCookies() throws Exception {
         //TODO modify test page to require a cookie for download
         FileDownloader downloadHandler = new FileDownloader(driver);
-        driver.get(webServerURL + ":" + webServerPort + "/downloadTest.html");
+        driver.get(destURL + "/downloadTest.html");
         WebElement downloadLink = driver.findElement(By.id("fileToDownload"));
         downloadHandler.setURISpecifiedInAnchorElement(downloadLink);
         downloadHandler.mimicWebDriverCookieState(true);

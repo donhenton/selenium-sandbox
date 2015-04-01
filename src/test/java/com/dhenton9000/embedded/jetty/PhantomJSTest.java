@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.phantomjs;
+package com.dhenton9000.embedded.jetty;
 
-import com.dhenton9000.embedded.jetty.JettyServer;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.io.IOException;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -20,7 +20,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
- 
+//import org.openqa.selenium.browserlaunches.Proxies;
 
 /**
  *
@@ -31,13 +31,22 @@ public class PhantomJSTest {
     private static final Logger LOG
             = LoggerFactory.getLogger(PhantomJSTest.class);
     private static JettyServer localWebServer;
-    private static String webServerURL = "http://localhost";
-    private static int webServerPort = 9081;
+    private static final int PORT = 4444;
+    private static final String CONTEXT_PATH = "/app";
+    private static final String APP_URL = "http://localhost:"
+            + PORT + CONTEXT_PATH;
     private static String downloadURI200;
 
     private PropertiesConfiguration config;
     private WebDriver driver = null;
     private GenericAutomationRepository automation = null;
+
+    @BeforeClass
+    public static void start() throws Exception {
+        localWebServer = new JettyServer(PORT, CONTEXT_PATH);
+        downloadURI200 = APP_URL + "/phantom.jsp";
+
+    }
 
     public PhantomJSTest() {
 
@@ -48,7 +57,7 @@ public class PhantomJSTest {
             driver = configureDriver(config);
 
             this.automation = new GenericAutomationRepository(driver, config);
-        } catch (Exception ex) {
+        } catch (ConfigurationException | IOException ex) {
             throw new RuntimeException(ex);
 
         }
@@ -58,17 +67,9 @@ public class PhantomJSTest {
         return automation;
     }
 
-    @BeforeClass
-    public static void start() throws Exception {
-        String appContext = "/phantom_web";
-        localWebServer = new JettyServer(webServerPort, appContext);
-        downloadURI200 = webServerURL + ":" + webServerPort+appContext + "/phantom.jsp";
-
-    }
-
     @AfterClass
     public static void stop() throws Exception {
-         localWebServer.stopJettyServer();
+        localWebServer.stopJettyServer();
     }
 
     @After
@@ -76,10 +77,8 @@ public class PhantomJSTest {
         this.getAutomation().getDriver().close();
     }
 
-    
     // ghost driver tests
     // https://github.com/detro/ghostdriver/blob/master/test/java/src/test/java/ghostdriver/FileUploadTest.java
-    
     @Test
     public void testPhantomSetup() {
 

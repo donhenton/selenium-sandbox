@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <description>selenium testing code</description>
     <groupId>com.dhenton9000.selenium.sandbox</groupId>
@@ -15,6 +15,11 @@
         <selenium.version>2.45.0</selenium.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>embedded-jetty</groupId>
+            <artifactId>embedded-jetty-sandbox</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.dhenton9000.utils</groupId>
             <artifactId>XmlUtils</artifactId>
@@ -165,7 +170,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18</version>
-                  <!--
+                <!--
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
@@ -228,12 +233,12 @@
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>BUNDLE</element>
                                     <limits>
-                                        <!-- implmentation is needed only for Maven 2 -->
-                                        <limit implementation="org.jacoco.report.check.Limit">
-                                            <counter>COMPLEXITY</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.01</minimum>
-                                        </limit>
+                                    <!-- implmentation is needed only for Maven 2 -->
+                                    <limit implementation="org.jacoco.report.check.Limit">
+                                    <counter>COMPLEXITY</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.01</minimum>
+                                    </limit>
                                     </limits>
                                 </rule>
                             </rules>
@@ -243,5 +248,4 @@
             </plugin>
         </plugins>
     </build>
-   
 </project>
