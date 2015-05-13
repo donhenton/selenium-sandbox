@@ -2,12 +2,22 @@ package com.dhenton9000.screenshots;
 
 
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,6 +109,56 @@ public class ScreenshotRepository {
         }
     }
 
+    
+       /**
+     * actually create the screenshot for a given environment. Prior to calling
+     * this, you will have to position the browser at the location you want the
+     * shot taken
+     *
+     * @param fullPathToPngImg full path to a PNG image
+     * @param imageEnvironment string that represents env eg, QA, DEV3
+     */
+    public void takeDirectScreenshotAndWriteEnv(String fullPathToPngImg, String imageEnvironment) {
+        FileInputStream stream = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        String d = sdf.format(new Date());
+        try {
+
+            LOG.info("creating screen shot at '" + fullPathToPngImg + "'");
+            // File pngFile = new File(fullPathToPngImg);
+            File scrFile = ((TakesScreenshot) driver)
+                    .getScreenshotAs(OutputType.FILE);
+            stream = FileUtils.openInputStream(scrFile);
+            BufferedImage image = ImageIO.read(stream);
+            Graphics2D graphics = image.createGraphics();
+            graphics.setColor(new Color(250, 0, 0, 255));
+            graphics.setFont(new Font("Courier", Font.BOLD, 15));
+            graphics.drawString(imageEnvironment , 10, 30);
+            
+            ImageIO.write(image, "PNG", new File(fullPathToPngImg+ScreenShot.IMAGE_EXTENSION) );
+            stream.close();
+
+        } catch (WebDriverException e) {
+            LOG.error("webdriver problem " + e.getClass().getName() + " " + e.getMessage());
+
+        } catch (IOException e) {
+            LOG.error("io problem " + e.getClass().getName() + " " + e.getMessage());
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException ex) {
+
+                }
+            }
+        }
+    }
+
+    
+    
+    
+    
+    
     /**
      * @return the driver
      */

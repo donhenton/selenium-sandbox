@@ -87,7 +87,7 @@ public class ImageComparator {
         return result;
     }
 
-    private CompareResult compareImages(InputStream stream1, InputStream stream2)
+    public CompareResult compareImages(InputStream stream1, InputStream stream2)
             throws IOException {
         // HashSet<Area> failedAreas = new HashSet<Area>();
 
@@ -168,7 +168,7 @@ public class ImageComparator {
         return result;
     }
 
-    private void markImageAreas(InputStream stream, Set<Area> toBeMarked,
+    public void markImageAreas(InputStream stream, Set<Area> toBeMarked,
             String outputFileName) throws IOException {
 
         // We have errors that need to be marked
