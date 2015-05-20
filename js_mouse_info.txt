@@ -1,0 +1,26 @@
+https://github.com/Ardesco/Powder-Monkey for samples on graphs and highcharts
+and selenium
+
+
+import org.openqa.selenium.internal.seleniumemulation.JavascriptLibrary;
+
+this found in selenium-java-2.31.0 that shows how to load a big js file in
+Selenium and inject/user it, the powder monkey pom uses this version of Selenium
+
+ there is a package
+org.openqa.selenium.internal.seleniumemulation.scripts that contains the 
+javascript
+
+
+=============================================================
+
+
+see com.dhenton9000.selenium.js.JavascriptLibrary in this package for more
+information
+
+
+com.lazerycode.selenium.tools.RobotPowered in this project illustrates using
+Swing robot class for actions
+
+
+
