@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+
+sample jquery positioning information
+
+        $foo = jQuery('#foo');
+        $bar = jQuery('#bar');
+
+        jQuery('td').empty();
+        jQuery('#foo_top').append(Math.round($foo.position().top));
+        jQuery('#foo_left').append($foo.position().left);
+        jQuery('#foo_offset').append('('+Math.round($foo.offset().top)+','+$foo.offset().left+')');
+        jQuery('#foo_offset_parent').append($foo.offsetParent().attr('id'));
+
+        jQuery('#bar_top').append(Math.round($bar.position().top));
+        jQuery('#bar_left').append($bar.position().left);
+        jQuery('#bar_offset').append('('+Math.round($bar.offset().top)+','+$bar.offset().left+')');
+        jQuery('#bar_offset_parent').append($bar.offsetParent().attr('id'));
+
+
+
+
+
+
+
+
+
+-->
+<html>
+    <head>
+        <title>Hover Demo</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link href="css/hover.css" rel="stylesheet" type="text/css"/>
+
+        <script src="js/libs/jquery/jquery.js" type="text/javascript"></script>
+        <script>
+
+            $(document).ready(function () {
+
+                var changeTooltipPosition = function (event) {
+                    var tooltipX = event.pageX - 8;
+                    var tooltipY = event.pageY + 8;
+                    console.log("toolip (" + tooltipX + "," + tooltipY + ")");
+                    $('div.tooltip').css({
+                        top: tooltipY,
+                        left: tooltipX
+                    });
+                };
+
+                var showTooltip = function (event) {
+                    console.log("in show ToolTip")
+                    tText = $("#hoverText").val();
+                    $('#contextMenu').remove();
+                    if (tText.toString().length > 0)
+                    {
+                        $('div.tooltip').remove();
+                        $('<div id="hoverMessageDivBlock" class="tooltip">' + tText + '</div>')
+                                .appendTo('body');
+                        changeTooltipPosition(event);
+                    }
+
+                };
+
+
+                var contextMenu = function (event)
+                {
+
+                    event.preventDefault();
+                    $('div.tooltip').remove();
+                    $('#contextMenu').remove();
+                    $('<div id="contextMenu" class="contextMenu success">Context Menu Please</div>')
+                            .appendTo('body');
+
+                    var tooltipX = event.pageX - 8;
+                    var tooltipY = event.pageY + 8;
+                    $('#contextMenu').css({
+                        top: tooltipY,
+                        left: tooltipX
+                    });
+
+                    console.log("context menu");
+                };
+
+                var hideTooltip = function () {
+                    $('div.tooltip').remove();
+                };
+
+                $("div#hoverItem").bind({
+                    mousemove: changeTooltipPosition,
+                    mouseenter: showTooltip,
+                    mouseleave: hideTooltip,
+                    contextmenu: contextMenu
+                });
+
+                var divElement = document.querySelector("div#hoverItem");
+                divElement.addEventListener('contextmenu', function (event) {
+                    //console.log(Object.keys(event));
+                    console.log("right click request ")
+                }, false);
+
+
+
+            });
+
+
+            function programMouseOver(event)
+            {
+                var jqueryHoverItem = $("div#hoverItem")
+                var jqueryMenu = $("div#contextMenu")
+                posx = jqueryHoverItem.offset().left + jqueryHoverItem.width() / 2;
+                posy = jqueryHoverItem.offset().top + (jqueryHoverItem.height() / 4);
+                //var divElement = document.querySelector("div#hoverItem");
+                var elem = jqueryHoverItem[0];
+                if (document.createEvent) {
+                    console.log("in createEvent [" + posx + "," + posy + "]")
+                    var evObj = document.createEvent('MouseEvents');
+
+                    evObj.initMouseEvent(
+                            "mouseover", //event type : click, mousedown, mouseup, mouseover, mousemove, mouseout.  
+                            true, //canBubble
+                            false, //cancelable
+                            window, //event's AbstractView : should be window 
+                            1, // detail : Event's mouse click count 
+                            posx, // screenX
+                            posy, // screenY
+                            posx, // clientX
+                            posy, // clientY
+                            false, // ctrlKey
+                            false, // altKey
+                            false, // shiftKey
+                            false, // metaKey 
+                            0, // button : 0 = click, 1 = middle button, 2 = right button  
+                            null // relatedTarget : Only used with some event types (e.g. mouseover and mouseout). In other cases, pass null.
+                            );
+                    elem.dispatchEvent(evObj);
+                } else if (document.createEventObject) {
+
+                    elem.fireEvent('onmouseover');
+                }
+            }
+             
+
+            function programContextMenu(event)
+            {
+                var jqueryHoverItem = $("div#hoverItem")
+                var jqueryMenu = $("div#contextMenu")
+                var divElement = jqueryHoverItem[0];
+                posx = jqueryHoverItem.offset().left + jqueryHoverItem.width() / 2;
+                posy = jqueryHoverItem.offset().top + (jqueryHoverItem.height() / 4);
+                var simulateDivClick = document.createEvent('MouseEvents');
+                console.log("view " + event.view)
+
+                simulateDivClick.initMouseEvent('contextmenu', true, true, divElement.defaultView, 0, posx, posy, posx, posy, false, false, false, 0, null, null);
+
+//invoke simulated clicked event
+                divElement.dispatchEvent(simulateDivClick);
+
+            }
+            
+            
+            function programContextMenuSingleCall(event)
+            {
+                var selector = "div#hoverItem";
+                var jqueryHoverItem = $(selector)
+                var posx = jqueryHoverItem.offset().left + jqueryHoverItem.width() / 2;
+                var posy = jqueryHoverItem.offset().top + (jqueryHoverItem.height() / 4);
+                arguments = [selector,posx,posy];
+                 
+                
+                programContextMenuSingle(arguments);
+
+                
+            }
+            
+            function getElementPosition(selector)
+            {
+               return [$(selector).offset().left,$(selector).offset().right,$(selector).offset().width,$(selector).offset().height] ;
+            }
+            
+            function programContextMenuSingle(arguments)
+            {
+                var sClick = document.createEvent('MouseEvents'); sClick.initMouseEvent('contextmenu', true, true, $(arguments[0])[0].defaultView, 1, arguments[1], arguments[2], arguments[1], arguments[2], false, false, false, 0, null, null); $(arguments[0])[0].dispatchEvent(sClick); 
+            }
+
+
+        </script>
+
+
+
+    </head>
+    <body>
+
+
+        <h2>On Hover</h2>
+
+        <p>Click on the 'Program Context Menu' button to call the right click 
+            code associated with the 'Hover over this' div.</p>
+        <p>
+        <table cellpadding="5" cellspacing="5">
+            <tr><th>Hover Text</th>
+                <td><input id="hoverText" value='hover Me,baby'  type="text" size="20" />
+                </td>
+            </tr>
+
+            <tr> 
+                <td colspan="2"><button onclick="programContextMenu(event)">Program Context Menu</button>
+                </td>
+            </tr>
+            <tr> 
+                <td colspan="2"><button onclick="programMouseOver(event)">Program MouseOver</button>
+                </td>
+            </tr>
+        </table>
+
+        <hr/>
+        <table cellpadding="5" cellspacing="5">
+           
+
+            <tr> 
+                <td colspan="2"><button onclick="programContextMenuSingleCall(event)">Program Context Menu (Single)</button>
+                </td>
+            </tr>
+            <tr> 
+                <td colspan="2"> 
+                </td>
+            </tr>
+        </table>
+
+        <div  id="hoverItem">Hover over this</div>
+
+
+
+    </body>
+</html>

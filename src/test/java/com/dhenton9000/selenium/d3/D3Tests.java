@@ -5,6 +5,8 @@
  */
 package com.dhenton9000.selenium.d3;
 
+import com.dhenton9000.embedded.jetty.JettyServer;
+import com.dhenton9000.embedded.jetty.ServerTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import com.dhenton9000.selenium.generic.AppspotTestBase;
 import static org.junit.Assert.*;
@@ -16,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
 import com.dhenton9000.selenium.generic.JSMethods.ElementDimension;
 import java.util.List;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.openqa.selenium.NoSuchElementException;
 
@@ -26,12 +30,24 @@ import org.openqa.selenium.NoSuchElementException;
 public class D3Tests extends AppspotTestBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(D3Tests.class);
+    private static final int PORT = 4444;
+    private static final String CONTEXT_PATH = "/app";
+    
+    private static JettyServer localWebServer;
+    private static final String APP_URL = "http://localhost:"
+            + PORT + CONTEXT_PATH;
+
+    @BeforeClass
+    public static void start() throws Exception {
+        localWebServer = new JettyServer(PORT, CONTEXT_PATH, null);
+
+    }
 
     public D3Tests() {
         /**
          * window will stay open and driver not close if set to false
          */
-       // this.setCloseDriver(false);
+        // this.setCloseDriver(false);
 
     }
 
@@ -62,13 +78,13 @@ public class D3Tests extends AppspotTestBase {
                 = this.getAutomation().getJsMethods().getElementDimensions(cssSelector);
 
         this.getAutomation().getJsMethods().mouseOver(cssSelector, 10 + dim.left, 10 + dim.top);
-        WebElement w =   null;
+        WebElement w = null;
         try {
-           w =   getAutomation().findElement(
+            w = getAutomation().findElement(
                     SELECTOR_CHOICE.cssSelector, testSelector);
-           
+
         } catch (NoSuchElementException err) {
-             
+
         }
         assertNotNull(w);
     }
@@ -140,5 +156,11 @@ public class D3Tests extends AppspotTestBase {
         this.getAutomation().findElement(
                 SELECTOR_CHOICE.linkText, "Tree Demo").click();
 
+    }
+    
+     
+    @AfterClass
+    public static void stop() throws Exception {
+        localWebServer.stopJettyServer();
     }
 }

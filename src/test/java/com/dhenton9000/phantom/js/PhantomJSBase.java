@@ -6,7 +6,6 @@
 package com.dhenton9000.phantom.js;
 
 import com.dhenton9000.embedded.jetty.JettyServer;
-import com.dhenton9000.phantom.js.PhantomJSTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.io.IOException;
 import org.apache.commons.configuration.ConfigurationException;
@@ -19,6 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This class forms the basis for tests that want to use a embedded server
+ * and phantomjs  web driver.
+ * 
+ * For an example of use  see {@link com.dhenton9000.js.inject.JSInjectTest}
  *
  * @author dhenton
  */
@@ -32,10 +35,13 @@ public class PhantomJSBase {
     private GenericAutomationRepository automation = null;
     private static JettyServer localWebServer = null;
     private static int port;
+    /**
+     * the app context, eg http://localhost:4444/app_context
+     */
     private static String appContext;
 
     public PhantomJSBase(int portNumber, String appContextStr) {
-        
+
         port = portNumber;
         appContext = appContextStr;
         LOG.debug("using properties file");
@@ -62,10 +68,19 @@ public class PhantomJSBase {
         localWebServer.stopJettyServer();
     }
 
-    protected static void initServer( String resourceBase) throws Exception {
-        if (localWebServer == null)
-        localWebServer = new JettyServer(port, appContext,resourceBase);
-        
+    /**
+     * initialize the server with an optional resource base. The resource base
+     * is where files will be served from
+     * null will default to 'src/main/resources'
+     * 
+     * @param resourceBase
+     * @throws Exception 
+     */
+    protected static void initServer(String resourceBase) throws Exception {
+        if (localWebServer == null) {
+            localWebServer = new JettyServer(port, appContext, resourceBase);
+        }
+
     }
 
     public GenericAutomationRepository getAutomation() {

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)http://donhenton.appspot.com/app/d3/treeDemo -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        
+        <title>D3 Tree Demo
+        </title>
+
+         
+        
+        <link rel="stylesheet" href="/MouseEvent-sandbox/css/bootstrap.min.css" media="screen">
+        <link rel="stylesheet" href="/MouseEvent-sandbox/css/bootstrap-responsive.min.css" media="screen">
+
+
+        <style type="text/css">
+            
+            .row-separate
+            {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            body {
+                padding-top: 40px; /* 40px to make the container go all the way to the bottom of the topbar */
+                background: url('/MouseEvent-sandbox/css/imgs/background.png')
+            }
+
+            .container {
+                width: 820px; 
+            }
+            /* downsize our container to make the content feel a bit tighter and more cohesive. 
+            NOTE: this removes two full columns from the grid, meaning you only go to 14 columns and not 16. */
+            .content {
+                background-color: #fff;
+                padding: 20px;
+                margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+                -webkit-border-radius: 0 0 6px 6px;
+                -moz-border-radius: 0 0 6px 6px;
+                border-radius: 0 0 6px 6px;
+                -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                box-shadow: 0 1px 2px rgba(0,0,0,.15);
+                z-index: -150;
+            }
+
+
+            .page-header {
+                background-color: #f5f5f5;
+                padding: 20px 20px 10px;
+                margin: -20px -20px 20px;
+            }
+        </style>
+
+        <!-- <script src="http://code.jquery.com/jquery.js"></script>-->
+        
+        
+
+
+
+
+
+
+<script src="/MouseEvent-sandbox/js/libs/jquery/jquery.js" type="text/javascript"></script>
+<script src="/MouseEvent-sandbox/js/d3.v3_4_2.min.js" type="text/javascript"></script>
+<script src="/MouseEvent-sandbox/js/messagepump.js" type="text/javascript"></script>
+<script src="/MouseEvent-sandbox/js/action_code.js" type="text/javascript"></script>
+<script src="/MouseEvent-sandbox/js/interactive_tree4.js" type="text/javascript"></script>
+<script src="/MouseEvent-sandbox/js/programatic_demo.js" type="text/javascript"></script>
+
+
+  <script>
+   absPath = 'http://localhost:8383/MouseEvent-sandbox';
+  
+  </script>
+    
+  <link href="/MouseEvent-sandbox/css/treedemo.css" rel="stylesheet" type="text/css"/>
+
+     
+            
+        
+        
+        <script>
+            var $dialog = null;
+
+            $(document).ready(function() {
+
+
+            });
+
+
+
+        </script>
+
+
+    </head>
+    <body data-pinterest-extension-installed="cr1.35">
+
+        <div class="container">
+            <div class="content">
+
+
+                <div class="page-header">
+                    <div class="row-fluid">
+                        <div class="pull-left">
+                            <h1>
+                                <small> 
+                                    Tree Demo
+                                </small>
+                            </h1>
+                        </div>
+
+                        <div class="pull-right">
+
+
+                            <a href="http://donhenton.appspot.com/#explainModal" role="button" class="btn large btn-info" data-toggle="modal">Explain</a>
+
+
+                        </div>
+                    </div>               
+
+
+                </div>
+
+                <div id="menu">
+                    
+
+
+
+
+
+
+
+
+
+<div class="navbar navbar-fixed-top navbar-inverse">
+
+    <div class="navbar-inner">
+        <div class="container-fluid">
+
+            <a class="brand" href="http://donhenton.appspot.com/app/home.html">Spring MVC3 Demonstration</a>
+
+            <div class="nav-collapse">
+                <!-- credits -->
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="http://donhenton.appspot.com/#" class="dropdown-toggle" data-toggle="dropdown">Credits <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://donhenton.appspot.com/app/home.html">Home</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/credits">Credits</a></li>
+                        </ul>
+                    </li>
+                </ul> 
+
+
+                <ul class="nav pull-left">
+                    <li class="dropdown">
+                        <a href="http://donhenton.appspot.com/#" class="dropdown-toggle" data-toggle="dropdown">Spring MVC 3 <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="http://donhenton.appspot.com/app/jsondemo.html">JSON Demo</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/getpostdemo/home.html">Get Post Demo</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/data/standard/home.html">Standard Arguments</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/messageconverters/home.html">Processing Input</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/views/html.html">Simple Html via JSP</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/tags/demo/home">Tag Demo</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/views/nontile.html">Non Tile Demos</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/complex/forms/home">Complex Forms</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/servlet/functions/home">Basic Servlet Functions</a></li>
+                            <!--  not supported by the google app engine as it uses java.awt.* 
+                            <li><a href="/app/image/generator/home">Image Generator</a></li>
+                            -->
+                            <li><a href="http://donhenton.appspot.com/app/errors/demo/home">Error Handling</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/security/demo/home">Security Demo</a></li>      
+
+                            <li class="divider"></li><li class="dropdown-header">Spring Context</li>
+                            <li><a href="http://donhenton.appspot.com/app/context/bookMaker.html">Bean Loaded in Context</a></li>
+
+                        </ul>
+                    </li>
+                </ul> 
+
+                <ul class="nav pull-left">
+                    <li class="dropdown">
+                        <a href="http://donhenton.appspot.com/#" class="dropdown-toggle" data-toggle="dropdown">JQuery Demos <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+
+                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/linkedLists">Linked Lists</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/jsonData">JSON Data</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/findingElements">Selections</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/positioning">Positioning</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-submenu"><a tabindex="-1" href="http://donhenton.appspot.com/#">Forms</a>
+                            <ul class="dropdown-menu">
+	                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/periodicUpdater">Periodic Updater</a></li>
+	                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/formSamples">Form Samples</a></li>
+	                            <li><a href="http://donhenton.appspot.com/app/jquery/formSubmission/home">Ajax Form Submission</a></li>
+	                        </ul>
+	                        </li>
+                            <li class="divider"></li>
+                            <li class="dropdown-submenu"><a tabindex="-1" href="http://donhenton.appspot.com/#">Image Displays</a>
+	                            <ul class="dropdown-menu">
+		                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/pixDisplay">JQuery Lightbox</a></li>
+		                            <li><a href="http://donhenton.appspot.com/app/jquery/demos/arttimer">Art Timer</a></li>
+								</ul>
+							</li>
+
+                        </ul>
+                    </li>
+                </ul> 
+
+
+                <ul class="nav pull-left">
+                    <li class="dropdown">
+                        <a href="http://donhenton.appspot.com/#" class="dropdown-toggle" data-toggle="dropdown">Bootstrap Demos <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+
+
+                            <li><a href="http://donhenton.appspot.com/app/bootstrap/demos/tabledemo">Tables</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/bootstrap/demos/buttons.html">Buttons</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/bootstrap/demos/dropdowns.html">Dropdowns</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/bootstrap/demos/tabs.html">Tabs</a></li>
+                            <li><a href="http://donhenton.appspot.com/app/bootstrap/demos/modals.html">Modal Dialogs</a></li>
+
+
+
+                        </ul>
+                    </li>
+                </ul> 
+
+
+                <ul class="nav pull-left">
+                    <li class="dropdown">
+                        <a href="http://donhenton.appspot.com/#" class="dropdown-toggle" data-toggle="dropdown">Backbone and D3 Demos<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                           <li><a href="http://donhenton.appspot.com/app/backbone/demos/localstorage">Backbone Local Storage</a></li>
+                           <li><a href="http://donhenton.appspot.com/app/backbone/demos/js/model">Javascript Model/View</a></li>
+         				   <li><a href="http://donhenton.appspot.com/app/backbone/demos/restaurant">Backbone Restaurant App</a></li>
+  
+         				   <li class="divider"></li>
+         				   <li><a href="http://donhenton.appspot.com/app/database/restaurant/load/main">Load Restaurants</a></li>
+                         	<li class="divider"></li>
+                         	 <li class="dropdown-submenu"><a tabindex="-1" href="http://donhenton.appspot.com/#">D3 Demos</a>
+                            <ul class="dropdown-menu">
+	                            <li><a href="./D3 Tree Demo_files/D3 Tree Demo.html">Tree Demo</a></li>
+	                             
+	                        </ul>
+	                        </li>
+                            
+                        </ul>
+                    </li>
+                </ul> 
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+                </div>
+
+                <div id="content" class="row-fluid">
+                    <div class="span12 main">
+                        
+
+
+
+
+
+
+ <!-- begin insert -->   
+ 
+ <script>
+            var $dialog = null;
+
+            $(document).ready(function() {
+
+                ActionCode.init();
+                TreeCode.createGraph();
+            });
+
+
+
+        </script>
+ 
+ 
+     
+                        <div id="tree-container" class="float-left span9 well">
+                            
+                         
+                        </div>     
+                            
+                            <div id="action-container" class="float-right span4">
+                                
+                            <button class="btn btn-small btn-info" onclick="programmatic_demo()">    
+                                <i class="icon-zoom-in icon-white"></i> Program Demo</button>
+                                
+                            <button class="btn btn-small btn-info" onclick="ActionCode.zoomIn()">
+                                <i class="icon-zoom-in icon-white"></i> Zoom In</button>
+                            <button class="btn btn-small btn-info" onclick="ActionCode.zoomOut()">
+                                <i class="icon-zoom-out icon-white"></i> Zoom Out</button>
+                            <div id="outputBox" style="margin-top:10px"></div>
+                        </div>
+  
+                        <div id="my_custom_menu" style="display:none;">
+
+
+                            <ul> 
+                                <li id="nodeId">
+                                </li><li><button class="btn btn-small btn-info" onclick="MESSAGE_PUMP.raiseEvent(&#39;1&#39;, ActionCode.actions.menuClicked)"><i class="icon-tasks icon-white"></i> Menu 1</button></li>
+                                <li><button class="btn btn-small btn-info" onclick="MESSAGE_PUMP.raiseEvent(&#39;2&#39;, ActionCode.actions.menuClicked)"><i class="icon-tasks icon-white"></i> Menu 2</button></li>    
+                            </ul>
+
+                        </div>
+
+                        <!-- end insert --> 
+
+
+
+                    </div>
+                </div>
+
+                <div id="explainModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="explainModalLabel" aria-hidden="true">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h3 id="explainModalLabel">Explanation:</h3>
+                    </div>
+                    <div style="max-height: 200px" class="modal-body">
+
+                        <h3>D3 Tree Demo</h3>
+<div>
+	<p>This is a demonstration of d3 for data visualization and
+		interactivity.</p>
+	<p>
+		The data is a fictional collection of business divisions for an
+		insurance company, and the providers who deliver service to the
+		divisions. The tree represents a hierarchy of divisions. The nodes
+		with the icons are <b>Providers</b> and all other nodes are <b>Divisions</b>
+	</p>
+</div>
+<h4>Interactions Available</h4>
+<ul>
+	<li>Clicking on a node will show/hide any children, as long as
+		they have children</li>
+	<li>Clicking on a provider node will highlight the path to that
+		node, as well as display explanatory text to the right</li>
+	<li>Right clicking on any node will display a context menu with
+		menu options</li>
+	<li>The <b>Zoom In </b> and <b>Zoom Out</b> will magnify the graph
+		and dismiss any context menus
+	</li>
+	<li>The graph can be panned if dragged on any part of the graph <b>except</b>
+	the nodes</li>
+</ul>
+
+
+<div>
+	The corresponding java code that handles these actions can be found in
+	<code>com.dhenton9000.spring.mvc.controllers.d3.</code>
+	<code>D3Controller</code>
+</div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" data-dismiss="modal" aria-hidden="false">Close</button>
+
+                    </div>
+                </div>
+
+
+                <!-- footer begin -->
+<div class="row-fluid">
+    <div class="span12">
+        <footer>
+            <hr>
+        </footer>
+    </div>
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <footer>
+            <p>donhenton[at]geemale[dot]com</p>
+        </footer>
+    </div>
+</div>
+    <!-- footer end -->
+
+
+            </div><!-- end content -->
+        </div> 
+ 
+
+    
+
+
+</body></html>
