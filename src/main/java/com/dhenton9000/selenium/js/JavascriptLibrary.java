@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Included in this package is the js code for injectableSelenium
  * the jar this was taken from is:
  * selenium-leg-rc-2.45.0.jar
+ * com.thoughtworks.selenium.webdriven
  * 
  * @author dhenton
  */
@@ -45,7 +46,7 @@ public class JavascriptLibrary {
   private final ConcurrentHashMap<String, String> scripts = new ConcurrentHashMap<>();
 
   private static final String injectableSelenium =
-      "/com/thoughtworks/selenium/webdriven/injectableSelenium.js";
+      "/com/dhenton9000/selenium/js/injectableSelenium.js";
   private static final String htmlUtils =
       "/com/thoughtworks/selenium/webdriven/htmlutils.js";
 
