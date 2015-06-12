@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <description>selenium testing code</description>
     <groupId>com.dhenton9000.selenium.sandbox</groupId>
@@ -15,6 +15,12 @@
         <selenium.version>2.45.0</selenium.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.9.4</version>
+            <type>jar</type>
+        </dependency>
         <dependency>
             <groupId>embedded-jetty</groupId>
             <artifactId>embedded-jetty-sandbox</artifactId>
@@ -40,13 +46,11 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
             <version>${jetty.version}</version>
-            
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>apache-jsp</artifactId>
             <version>${jetty.version}</version>
-            
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -99,7 +103,6 @@
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
-             
             <type>jar</type>
         </dependency>
         <dependency>
@@ -111,7 +114,7 @@
         <dependency>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
-            <version>1.4.01</version>           
+            <version>1.4.01</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -165,19 +168,7 @@
                     </compilerArguments>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18</version>
-                <!--
-                <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                        <include>**/*Tests.java</include>
-                    </includes>
-                </configuration>
-                -->
-            </plugin>
+          
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -232,12 +223,12 @@
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
                                     <element>BUNDLE</element>
                                     <limits>
-                                    <!-- implmentation is needed only for Maven 2 -->
-                                    <limit implementation="org.jacoco.report.check.Limit">
-                                    <counter>COMPLEXITY</counter>
-                                    <value>COVEREDRATIO</value>
-                                    <minimum>0.01</minimum>
-                                    </limit>
+                                        <!-- implmentation is needed only for Maven 2 -->
+                                        <limit implementation="org.jacoco.report.check.Limit">
+                                            <counter>COMPLEXITY</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.01</minimum>
+                                        </limit>
                                     </limits>
                                 </rule>
                             </rules>
@@ -247,4 +238,84 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>standard</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.16</version>
+                        <configuration>
+                            <includes>
+                                <include>/com/dhenton9000/js/inject/*.java</include>
+                                <include>/com/dhenton9000/js/excel/POITest.java</include>
+                                <include>/com/dhenton9000/selenium/sandbox/jquery/*.java</include>
+                                <include>/com/dhenton9000/selenium/generic/GenericSeleniumTests.java</include>
+                                <include>/com/lazerycode/selenium/filedownloader/FileUploaderTest.java</include>
+                            </includes>
+                        </configuration>
+                        <!-- this will limit to junit -->
+                        <!-- http://maven.apache.org/surefire/maven-surefire-plugin/examples/providers.html -->
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-junit47</artifactId>
+                                <version>2.18.1</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- use test ng for testing -->
+        <profile>
+            <id>testng</id>
+            <properties>
+                <envvar>alpha</envvar>
+                <!-- the src/main/env folder to use -->
+                <remote.server>local</remote.server>
+                <testNgFile>testng</testNgFile>
+                <!-- the test ng file to use -->
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <!-- this means grab the envar folder content and send to target -->
+                        <directory>src/main/env/${envvar}</directory>
+                        <filtering>true</filtering>
+                        <!-- it is set up for the dep.properties file -->
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.16</version>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <!-- these will be available to code via System.getProperties -->
+                                <remote.server>${remote.server}</remote.server>
+                                <test.env>${envvar}</test.env>
+                            </systemPropertyVariables>
+                            <suiteXmlFiles>
+                                <suiteXmlFile>${project.build.directory}/test-classes/testng/junit-sample.xml</suiteXmlFile>
+                                <suiteXmlFile>${project.build.directory}/test-classes/testng/testng-sample.xml</suiteXmlFile>
+                            </suiteXmlFiles>
+                        </configuration>
+                        <dependencies>
+                         
+                            <dependency>
+                                <groupId>org.apache.maven.surefire</groupId>
+                                <artifactId>surefire-testng</artifactId>
+                                <version>2.18.1</version>
+                            </dependency>
+                        
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

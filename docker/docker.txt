@@ -1,0 +1,119 @@
+the docker file:
+https://registry.hub.docker.com/u/elgalu/docker-selenium/
+
+boot2docker is a special thing that gives unix stuff to mac, and normally
+would not be needed execept that you are on a mac, so boot2docker first, 
+then docker
+
+
+install boot2docker
+boot2docker init
+this creates ENV variables that should go into your bash_profile
+
+
+bring boot2docker up first, then you can use docker
+
+boot2docker up
+then
+docker run
+
+
+all mapped ports aren't at local host they are at xxxx
+where xxxx can be found 
+using 
+
+boot2docker ip
+192.168.59.103
+
+
+docker run --rm --name=ch -p=0.0.0.0:8484:8484 -p=0.0.0.0:2222:2222 \
+                          -p=0.0.0.0:4470:4444 -p=0.0.0.0:5920:5900 \
+    -e SCREEN_WIDTH=1920 -e SCREEN_HEIGHT=1080 \
+    -e VNC_PASSWORD=hola -e WITH_GUACAMOLE=false \
+    -e SSH_PUB_KEY="$(cat ~/.ssh/id_rsa.pub)" \
+    elgalu/docker-selenium
+
+this will create a selenium-standalone server which has a webpage at
+http://192.168.59.103:4470/wd/hub/static/resource/hub.html
+
+The driver connection point is 
+http://192.168.59.103:4470/wd/hub
+
+===================================================================
+HEADLESS
+http://www.alittlemadness.com/2008/03/05/running-selenium-headless/
+http://www.seleniumtests.com/2012/04/headless-tests-with-firefox-webdriver.html
+http://afitnerd.com/2011/09/06/headless-browser-testing-on-mac/
+
+
+
+#==========
+# Selenium
+#==========
+$ export SELENIUM_MAJOR_MINOR_VERSION 2.46
+$ export ENV SELENIUM_PATCH_LEVEL_VERSION 0
+RUN  mkdir -p /opt/selenium \
+  && wget --no-verbose http://selenium-release.storage.googleapis.com/$SELENIUM_MAJOR_MINOR_VERSION/selenium-server-standalone-$SELENIUM_MAJOR_MINOR_VERSION.$SELENIUM_PATCH_LEVEL_VERSION.jar -O /opt/selenium/selenium-server-standalone.jar
+
+
+#==========================
+# Mozilla Firefox - Latest
+#==========================
+# dbus-x11 is needed to avoid http://askubuntu.com/q/237893/134645
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    firefox \
+    dbus-x11 \
+  && rm -rf /var/lib/apt/lists/*
+
+#===================
+# VNC, Xvfb, Xdummy
+#===================
+# xvfb: Xvfb or X virtual framebuffer is a display server
+#  + implements the X11 display server protocol
+#  + performs all graphical operations in memory
+#
+# Xdummy: Is like Xvfb but uses an LD_PRELOAD hack to run a stock X server
+#  - uses a "dummy" video driver
+#  - with Xpra allows to use extensions like Randr, Composite, Damage
+RUN apt-get update -qqy \
+  && apt-get -qqy install \
+    x11vnc \
+    xvfb \
+    xorg \
+    xserver-xorg-video-dummy \
+  && rm -rf /var/lib/apt/lists/*
+  
+  
+  $ export DISPLAY=:99
+  $ export SELENIUM_PORT=4444
+  $ export SCREEN_NUM=0
+  $ export XVFB_LOG="/var/log/sele/Xvfb_headless.log"
+  $ export SELENIUM_LOG="/var/log/sele/selenium-server-standalone.log"
+  $ export SCREEN_WIDTH 1900
+  $ export SCREEN_HEIGHT 1480
+  $ export SCREEN_MAIN_DEPTH 24
+  $ export SCREEN_DEPTH ${SCREEN_MAIN_DEPTH}+32
+  $ export GEOMETRY="$SCREEN_WIDTH""x""$SCREEN_HEIGHT""x""$SCREEN_DEPTH"
+  
+  #===================
+  # Running the Xvfb server
+  #===================
+  Xvfb $DISPLAY -screen $SCREEN_NUM $GEOMETRY \
+      -ac -r -cc 4 -accessx -xinerama -extension RANDR 2>&1 | tee $XVFB_LOG &
+  XVFB_PID=$!
+  
+  #===================
+  # Running the Selenium server
+  #===================
+JAVA_OPTS="$(java-dynamic-memory-opts.sh)"
+echo INFO: JAVA_OPTS are "$JAVA_OPTS"
+
+java $JAVA_OPTS \
+    -jar /opt/selenium/selenium-server-standalone.jar \
+    -port $SELENIUM_PORT 2>&1 | tee $SELENIUM_LOG
+
+
+
+
+
