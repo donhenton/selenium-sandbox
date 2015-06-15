@@ -6,8 +6,12 @@
 package com.dhenton9000.phantom.js;
 
 import com.dhenton9000.embedded.jetty.JettyServer;
+import com.dhenton9000.selenium.drivers.DriverFactory;
+import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_ENV;
+import com.dhenton9000.selenium.generic.BaseTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.io.IOException;
+import java.util.logging.Level;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.WebDriver;
@@ -25,12 +29,12 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class PhantomJSBase {
+public class PhantomJSBase extends BaseTest {
 
     private static final Logger LOG
             = LoggerFactory.getLogger(PhantomJSTest.class);
 
-    private final PropertiesConfiguration config;
+   // private final PropertiesConfiguration config;
     private WebDriver driver = null;
     private GenericAutomationRepository automation = null;
     private static JettyServer localWebServer = null;
@@ -46,15 +50,15 @@ public class PhantomJSBase {
         appContext = appContextStr;
         LOG.debug("using properties file");
         try {
-            config = new PropertiesConfiguration("env.properties");
+            //config = new PropertiesConfiguration("env.properties");
             LOG.debug("reading config in " + this.getClass().getName());
-            driver = configureDriver(getConfig());
+            driver = getDriver(DRIVER_ENV.phantomjs);
 
-            this.automation = new GenericAutomationRepository(driver, getConfig());
-        } catch (ConfigurationException | IOException ex) {
+            this.automation = new GenericAutomationRepository(driver, getConfiguration());
+        } catch ( IOException ex  ) {
             throw new RuntimeException(ex);
 
-        }
+        }  
     }
 
     /**
@@ -91,40 +95,9 @@ public class PhantomJSBase {
         return "http://localhost:" + getPort() + getAppContext() + item;
     }
 
-    protected final WebDriver configureDriver(PropertiesConfiguration sConfig)
-            throws IOException {
-        DesiredCapabilities sCaps = new DesiredCapabilities();
-        sCaps.setJavascriptEnabled(true);
-        sCaps.setCapability("takesScreenshot", false);
-        if (sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY) != null) {
-            sCaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
-                    sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY));
-        } else {
-            throw new IOException(String.format("Property '%s' not set!",
-                    PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY));
-        }
-        // "phantomjs_driver_path"
-        if (sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_PATH_PROPERTY) != null) {
-            LOG.debug("Test will use an external GhostDriver");
-            sCaps.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_PATH_PROPERTY,
-                    sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_PATH_PROPERTY));
-        } else {
-            LOG.debug("Test will use PhantomJS internal GhostDriver");
-        }
+   
 
-        WebDriver mDriver = new PhantomJSDriver(sCaps);
-
-        return mDriver;
-
-    }
-
-    /**
-     * @return the config
-     */
-    public final PropertiesConfiguration getConfig() {
-        return config;
-    }
-
+    
     /**
      * @return the port
      */

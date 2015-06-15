@@ -4,6 +4,8 @@
  */
 package com.dhenton9000.selenium.sandbox.jquery;
 
+import com.dhenton9000.selenium.generic.BaseTest;
+import java.io.IOException;
 import org.openqa.selenium.interactions.Action;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -23,17 +25,18 @@ import org.openqa.selenium.interactions.Actions;
  *
  * @author dhenton
  */
-public class DraggableTest {
+public class DraggableTest extends BaseTest {
 
     private static WebDriver driver;
+    
+    public DraggableTest() throws IOException
+    {
+         driver = getDriver();
+    }
 
     @BeforeClass
     public static void setUp() {
-        FirefoxProfile profile = new FirefoxProfile();
-        profile.setEnableNativeEvents(true);
-        driver = new FirefoxDriver(profile);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+      
     }
 
     @AfterClass

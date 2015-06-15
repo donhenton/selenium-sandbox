@@ -5,23 +5,20 @@
  */
 package com.dhenton9000.selenium.generic;
 
- 
-
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
-import static com.dhenton9000.selenium.sandbox.jquery.JQueryTest.HTML_FILE;
+import com.dhenton9000.selenium.drivers.DriverFactory;
+import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_ENV;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.NoAlertPresentException;
@@ -29,43 +26,72 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.internal.Locatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * base class for tests that which to have the driver set
- * via the remote.server property of the pom.xml file
+ * base class for tests that which to have the driver set via the remote.server
+ * property of the pom.xml file
+ *
  * @author dhenton
  */
 public class BaseTest {
 
     private final Logger logger = LoggerFactory.getLogger(BaseTest.class);
-     
-    
-    
-    protected GenericAutomationRepository getAutomationRepository()
-    {
-        return new GenericAutomationRepository(getConfiguration());
+    private DriverFactory driverFactory = new DriverFactory();
+
+    protected GenericAutomationRepository getAutomationRepository() {
+        WebDriver d = null;
+        try {
+            d = getDriver();
+        } catch (IOException ex) {
+            throw new RuntimeException("io problem in repository creation "
+                    +ex.getMessage());
+        }
+        return new GenericAutomationRepository(d, getConfiguration());
     }
-    
-    protected WebDriver getDriver()
-    {
+
+    protected WebDriver getDriver() throws IOException {
         //TODO: use the remote.server property here to configure
         //the drivers going to driver factory
-        
-        WebDriver driver = new FirefoxDriver();
-        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        
-        return driver;
-       
+        DRIVER_ENV env = null;
+        String envString = System.getProperty("remote.server");
+        if (envString == null)
+        {
+            env = DRIVER_ENV.local;
+        }
+        else
+        {
+            env = DRIVER_ENV.valueOf(envString);
+        }
+
+        return getDriver(env);
+
     }
-    
-    protected Configuration getConfiguration()
-    {
-         Configuration config = null;
+
+    protected WebDriver getDriver(DRIVER_ENV env) throws IOException {
+        WebDriver driver = null;
+        switch (env) {
+            case phantomjs:
+                driver = driverFactory.configurePhantomJsDriver(getConfiguration());
+                break;
+            case local:
+                driver
+                        = driverFactory.configureDriver(
+                                DriverFactory.DRIVER_TYPES.FireFox, null);
+                driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+                driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                break;
+            default:
+
+        }
+
+        return driver;
+    }
+
+    protected Configuration getConfiguration() {
+        Configuration config = null;
         logger.debug("using properties file");
         try {
             config = new PropertiesConfiguration("env.properties");
@@ -84,14 +110,14 @@ public class BaseTest {
 
     }
 
-     public static String createPathToTestResources(String htmlFilename) {
+    public static String createPathToTestResources(String htmlFilename) {
         char sc = File.separatorChar;
         String currentDir = System.getProperty("user.dir");
         String resourcesPath = currentDir + sc + "src" + sc + "test" + sc + "resources";
         String htmlPath = resourcesPath + sc + htmlFilename;
         return htmlPath;
     }
-    
+
     protected boolean isAlertPresent(WebDriver driver) {
         boolean isAlertPresent = true;
         String oldWindow = driver.getWindowHandle();

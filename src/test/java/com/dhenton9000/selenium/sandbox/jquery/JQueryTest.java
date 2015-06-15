@@ -11,7 +11,6 @@ import com.google.common.io.Resources;
 import com.thoughtworks.selenium.Selenium;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 import org.junit.AfterClass;
 import org.junit.Before;
 import static org.junit.Assert.*;
@@ -22,7 +21,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +35,7 @@ public class JQueryTest  extends BaseTest {
     private final static Logger logger = LoggerFactory.getLogger(JQueryTest.class);
     private static WebDriver driver;
     
-    public JQueryTest()
+    public JQueryTest() throws IOException
     {
         driver = this.getDriver();
         js = (JavascriptExecutor) driver;
