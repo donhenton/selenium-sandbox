@@ -49,8 +49,8 @@ public class SingleScreenshotTester {
         } catch (ConfigurationException ex) {
             LOG.info("did not find env.properties file");
         }
-
-        app = new AppspotRepository(config);
+        g = new GenericAutomationRepository(config);
+        app = new AppspotRepository(g);
         g = app.getAutomation();
 
         AppComparisonScreenShot sample = new AppComparisonScreenShot(g,app);

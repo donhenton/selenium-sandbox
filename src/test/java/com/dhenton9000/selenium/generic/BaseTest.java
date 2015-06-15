@@ -13,9 +13,15 @@ package com.dhenton9000.selenium.generic;
  * and open the template in the editor.
  */
 
+import static com.dhenton9000.selenium.sandbox.jquery.JQueryTest.HTML_FILE;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.NoAlertPresentException;
@@ -23,17 +29,52 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.internal.Locatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * base class for tests that which to have the driver set
+ * via the remote.server property of the pom.xml file
  * @author dhenton
  */
 public class BaseTest {
 
     private final Logger logger = LoggerFactory.getLogger(BaseTest.class);
+     
+    
+    
+    protected GenericAutomationRepository getAutomationRepository()
+    {
+        return new GenericAutomationRepository(getConfiguration());
+    }
+    
+    protected WebDriver getDriver()
+    {
+        //TODO: use the remote.server property here to configure
+        //the drivers going to driver factory
+        
+        WebDriver driver = new FirefoxDriver();
+        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        
+        return driver;
+       
+    }
+    
+    protected Configuration getConfiguration()
+    {
+         Configuration config = null;
+        logger.debug("using properties file");
+        try {
+            config = new PropertiesConfiguration("env.properties");
+            logger.debug("reading config in " + this.getClass().getName());
+        } catch (ConfigurationException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        return config;
+    }
 
     public void mouseOverElement(WebElement element, WebDriver driver) {
 

@@ -15,21 +15,16 @@ import com.dhenton9000.selenium.drivers.DriverFactory;
 import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_TYPES;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.logging.Logs;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.html5.LocalStorage;
 
 public class GenericAutomationRepository {
@@ -79,6 +73,11 @@ public class GenericAutomationRepository {
         this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
 
+    }
+    
+    public Configuration getConfig()
+    {
+        return this.config;
     }
 
     public WaitMethods getWaitMethods() {

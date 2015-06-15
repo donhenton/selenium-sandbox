@@ -6,9 +6,6 @@
 package com.dhenton9000.selenium.generic;
  
  
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.junit.After;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class AppspotTestBase {
+public class AppspotTestBase extends BaseTest {
 
     private   AppspotRepository appspotRepository = null;
     private static final Logger LOG = LoggerFactory.getLogger(AppspotTestBase.class);
@@ -31,22 +28,11 @@ public class AppspotTestBase {
     private boolean closeDriver = true;
 
     public AppspotTestBase() {
-        Configuration config = null;
-        LOG.debug("using properties file");
-        try {
-            config = new PropertiesConfiguration("env.properties");
-            LOG.debug("reading config in " + this.getClass().getName());
-        } catch (ConfigurationException ex) {
-            LOG.info("did not find env.properties file");
-        }
-
-        appspotRepository = new AppspotRepository(config);
+        
+        appspotRepository = new AppspotRepository(getAutomationRepository());
     }
 
-    public AppspotTestBase(Configuration config) {
-
-        appspotRepository = new AppspotRepository(config);
-    }
+ 
 
     /**
      * @return the appspotRepository

@@ -36,6 +36,12 @@ public class JQueryTest  extends BaseTest {
     private static JavascriptExecutor js;
     private final static Logger logger = LoggerFactory.getLogger(JQueryTest.class);
     private static WebDriver driver;
+    
+    public JQueryTest()
+    {
+        driver = this.getDriver();
+        js = (JavascriptExecutor) driver;
+    }
 
     @BeforeClass
     public static void beforeClass() {
@@ -43,11 +49,8 @@ public class JQueryTest  extends BaseTest {
         //  FirefoxBinary binary = new FirefoxBinary(new File("C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe"));
 
         //  driver = new FirefoxDriver(binary, profile);
-        driver = new FirefoxDriver();
-        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        
         driver.get("file:///"+createPathToTestResources(HTML_FILE));
-        js = (JavascriptExecutor) driver;
 
         // load jQuery dynamically
         // this allows selenium to exploit jquery;

@@ -5,11 +5,8 @@
  */
 package com.dhenton9000.selenium.generic.nytimes;
 
-import com.dhenton9000.selenium.generic.GenericAutomationRepository;
+import com.dhenton9000.selenium.generic.BaseTest;
 import com.dhenton9000.selenium.generic.NYTimesRepository;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
  
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +16,7 @@ import org.testng.annotations.AfterClass;
  *
  * @author dhenton
  */
-public class NYTimesBase {
+public class NYTimesBase extends BaseTest {
 
     private NYTimesRepository nyTimesRepository = null;
     private static final Logger LOG = LoggerFactory.getLogger(NYTimesBase.class);
@@ -31,22 +28,12 @@ public class NYTimesBase {
     private boolean closeDriver = true;
 
     public NYTimesBase() {
-        Configuration config = null;
-        LOG.debug("using properties file");
-        try {
-            config = new PropertiesConfiguration("env.properties");
-            LOG.debug("reading config in " + this.getClass().getName());
-        } catch (ConfigurationException ex) {
-            LOG.info("did not find env.properties file");
-        }
+         
 
-        nyTimesRepository = new NYTimesRepository(config);
+        nyTimesRepository = new NYTimesRepository(getAutomationRepository());
     }
 
-    public NYTimesBase(Configuration config) {
-
-        nyTimesRepository = new NYTimesRepository(config);
-    }
+    
 
     /**
      * @return the appspotRepository
@@ -55,9 +42,7 @@ public class NYTimesBase {
         return nyTimesRepository;
     }
 
-    public GenericAutomationRepository getAutomation() {
-        return nyTimesRepository.getAutomation();
-    }
+    
 
     @AfterClass
     public void teardownTest() {

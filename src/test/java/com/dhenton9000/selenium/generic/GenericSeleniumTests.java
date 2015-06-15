@@ -5,10 +5,8 @@
  */
 package com.dhenton9000.selenium.generic;
 
-import java.util.List;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

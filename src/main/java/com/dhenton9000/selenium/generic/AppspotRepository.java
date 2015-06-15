@@ -18,23 +18,19 @@ import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
  */
 public class AppspotRepository {
 
-    private Configuration config;
+    
     private GenericAutomationRepository automation;
     private static final Logger LOG = LoggerFactory.getLogger(AppspotRepository.class);
 
-    public AppspotRepository(WebDriver driver, Configuration config) {
+    public AppspotRepository(GenericAutomationRepository automation) {
 
-        this.config = config;
-        this.automation = new GenericAutomationRepository(driver, config);
-
-    }
-
-    public AppspotRepository(Configuration config) {
-
-        this.config = config;
-        this.automation = new GenericAutomationRepository(config);
+        
+        this.automation = automation;
+         
 
     }
+
+    
 
     public GenericAutomationRepository getAutomation() {
         return automation;
@@ -44,12 +40,12 @@ public class AppspotRepository {
      * @return the config
      */
     public Configuration getConfig() {
-        return config;
+        return this.getAutomation().getConfig();
     }
 
     public void initialNavigation() {
 
-        String url = config.getString("test.env.url");
+        String url = getConfig().getString("test.env.url");
         LOG.debug("beginning load of browser " + url);
         if (url == null) {
             throw new RuntimeException("must specify 'test.env.url' in env.properties");

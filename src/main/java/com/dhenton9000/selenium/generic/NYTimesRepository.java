@@ -17,25 +17,19 @@ import org.slf4j.LoggerFactory;
  */
 public class NYTimesRepository {
 
-    private final Configuration config;
+   
     private final GenericAutomationRepository automation;
     private static final Logger LOG = LoggerFactory.getLogger(NYTimesRepository.class);
 
     
-    public NYTimesRepository(WebDriver driver, Configuration config) {
+    public NYTimesRepository(GenericAutomationRepository automation) {
 
-        this.config = config;
-        this.automation = new GenericAutomationRepository(driver, config);
-
-    }
-
-    public NYTimesRepository(Configuration config) {
-
-        this.config = config;
-        this.automation = new GenericAutomationRepository(config);
+        
+        this.automation = automation;
+         
 
     }
-    
+     
     
     
     
@@ -47,7 +41,7 @@ public class NYTimesRepository {
      * @return the config
      */
     public Configuration getConfig() {
-        return config;
+        return this.getAutomation().getConfig();
     }
     
     
