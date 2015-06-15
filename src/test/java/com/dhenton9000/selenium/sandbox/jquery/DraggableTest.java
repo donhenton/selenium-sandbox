@@ -8,16 +8,16 @@ import com.dhenton9000.selenium.generic.BaseTest;
 import java.io.IOException;
 import org.openqa.selenium.interactions.Action;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+//import org.junit.AfterClass;
+//import org.junit.BeforeClass;
+//import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 // http://selenium.polteq.com/en/perform-a-sequence-of-actions-with-selenium-webdriver
 

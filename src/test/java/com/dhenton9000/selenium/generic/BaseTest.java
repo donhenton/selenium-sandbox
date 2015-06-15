@@ -52,7 +52,7 @@ public class BaseTest {
         return new GenericAutomationRepository(d, getConfiguration());
     }
 
-    protected WebDriver getDriver() throws IOException {
+    protected   WebDriver getDriver() throws IOException {
         //TODO: use the remote.server property here to configure
         //the drivers going to driver factory
         DRIVER_ENV env = null;
