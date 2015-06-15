@@ -1,33 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-
-
-http://testng.org/doc/documentation-main.html#testng-xml
-
--->
-
-
-
-  
 <suite name="TestNG Suite" verbose="4">
-  
-<!--
+    <!--
   
   
   Sample for test ng
   
     -->
-  
-    <test name="Testng" parallel="classes" thread-count="1"  >
-        <packages>
-            <package name="com.dhenton9000.testng" />
-        </packages>
-       
+    <test name="Testng" parallel="classes" thread-count="1">
+        <classes>
+            <class name="com.dhenton9000.selenium.testng.TestNgSeleniumTests"/>
+            <class name="com.dhenton9000.testng.MavenPropertiesTest"/>
+        </classes>
     </test>
-
-  
+    <test junit="true" name="Junit" parallel="classes" thread-count="1">
+        <packages>
+            <package name="com.dhenton9000.selenium.sandbox.jquery"/>
+        </packages>
+    </test>
 </suite>

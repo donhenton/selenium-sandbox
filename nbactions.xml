@@ -136,7 +136,50 @@
                 <skipTests>false</skipTests>
             </properties>
         </action>
-         
+    <action>
+            <actionName>CUSTOM-set Env Alpha</actionName>
+            <displayName>set Env Alpha</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+                <test.env>alpha</test.env>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>setEnv</activatedProfile>
+            </activatedProfiles>
+        </action>
+      <action>
+            <actionName>CUSTOM-set Env Beta</actionName>
+            <displayName>set Env Beta</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+                <test.env>beta</test.env>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>setEnv</activatedProfile>
+            </activatedProfiles>
+        </action>
+      <action>
+            <actionName>CUSTOM-RUn TestNg Tests</actionName>
+            <displayName>RUn TestNg Tests</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>test</goal>
+            </goals>
+            <properties>
+                <testNgFile>testng-sample</testNgFile>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>testNg</activatedProfile>
+            </activatedProfiles>
+        </action>    
         
         
 </actions>
