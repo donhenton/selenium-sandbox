@@ -295,9 +295,9 @@
             <properties>
                 <!-- the src/main/env folder to use -->
                 <test.env>alpha</test.env>
-                <!-- which driver to use -->
+                <!-- which driver to use eg local, remote, saucelabs -->
                 <remote.server>local</remote.server>
-                <!-- the test ng file to use  can be used to parameterize a call-->
+                <!-- the test ng file to use  can be used to parameterize the call-->
                 <testNgFile>you-must-name-your-testNgFile</testNgFile>
             </properties>
             <build>

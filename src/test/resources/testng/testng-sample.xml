@@ -10,6 +10,7 @@
         <classes>
             <class name="com.dhenton9000.selenium.testng.TestNgSeleniumTests"/>
             <class name="com.dhenton9000.testng.MavenPropertiesTest"/>
+            <class name="com.dhenton9000.selenium.generic.nytimes.NYTimesTest"/>
         </classes>
     </test>
     <test junit="true" name="Junit" parallel="classes" thread-count="1">
