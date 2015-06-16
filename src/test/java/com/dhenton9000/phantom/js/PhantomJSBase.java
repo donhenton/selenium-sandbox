@@ -54,7 +54,7 @@ public class PhantomJSBase extends BaseTest {
             LOG.debug("reading config in " + this.getClass().getName());
             driver = getDriver(DRIVER_ENV.phantomjs);
 
-            this.automation = new GenericAutomationRepository(driver, getConfiguration());
+            this.automation = new GenericAutomationRepository(driver, DriverFactory.getConfiguration());
         } catch ( IOException ex  ) {
             throw new RuntimeException(ex);
 
@@ -111,5 +111,9 @@ public class PhantomJSBase extends BaseTest {
     public static String getAppContext() {
         return appContext;
     }
+
+   
+
+   
 
 }

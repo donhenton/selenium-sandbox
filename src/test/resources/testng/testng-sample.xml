@@ -16,14 +16,15 @@
         <classes>
             <class name="com.dhenton9000.selenium.generic.nytimes.NYTimesTest"/>
         </classes>
+        <packages>
+            <package name="com.dhenton9000.selenium.sandbox.jquery"/>
+        </packages>
     </test>
     <test junit="true" name="BaseTest Tests Junit" parallel="classes" thread-count="1">
         <classes>
             <class name="com.dhenton9000.selenium.generic.GenericSeleniumTests"/>
             <class name="com.dhenton9000.phantom.js.PhantomJSTest"/>
         </classes>
-        <packages>
-            <package name="com.dhenton9000.selenium.sandbox.jquery"/>
-        </packages>
+        
     </test>
 </suite>

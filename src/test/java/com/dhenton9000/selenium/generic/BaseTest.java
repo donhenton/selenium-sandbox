@@ -14,10 +14,6 @@ import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_ENV;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
@@ -38,7 +34,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BaseTest {
 
-    private final Logger logger = LoggerFactory.getLogger(BaseTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(BaseTest.class);
     private DriverFactory driverFactory = new DriverFactory();
 
     protected GenericAutomationRepository getAutomationRepository() {
@@ -49,57 +45,17 @@ public class BaseTest {
             throw new RuntimeException("io problem in repository creation "
                     +ex.getMessage());
         }
-        return new GenericAutomationRepository(d, getConfiguration());
+        return new GenericAutomationRepository(d, DriverFactory.getConfiguration());
     }
-
-    protected   WebDriver getDriver() throws IOException {
-        //TODO: use the remote.server property here to configure
-        //the drivers going to driver factory
-        DRIVER_ENV env = null;
-        String envString = System.getProperty("remote.server");
-        if (envString == null)
-        {
-            env = DRIVER_ENV.local;
-        }
-        else
-        {
-            env = DRIVER_ENV.valueOf(envString);
-        }
-
-        return getDriver(env);
-
+    
+    protected WebDriver getDriver() throws IOException
+    {
+        return driverFactory.getDriver();
     }
-
-    protected WebDriver getDriver(DRIVER_ENV env) throws IOException {
-        WebDriver driver = null;
-        switch (env) {
-            case phantomjs:
-                driver = driverFactory.configurePhantomJsDriver(getConfiguration());
-                break;
-            case local:
-                driver
-                        = driverFactory.configureDriver(
-                                DriverFactory.DRIVER_TYPES.FireFox, null);
-                driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-                driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-                break;
-            default:
-
-        }
-
-        return driver;
-    }
-
-    protected Configuration getConfiguration() {
-        Configuration config = null;
-        logger.debug("using properties file");
-        try {
-            config = new PropertiesConfiguration("env.properties");
-            logger.debug("reading config in " + this.getClass().getName());
-        } catch (ConfigurationException ex) {
-            throw new RuntimeException(ex.getMessage());
-        }
-        return config;
+    
+    
+    protected WebDriver getDriver(DRIVER_ENV driver_env) throws IOException {
+         return driverFactory.getDriver(driver_env);
     }
 
     public void mouseOverElement(WebElement element, WebDriver driver) {

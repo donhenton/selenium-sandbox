@@ -11,18 +11,18 @@ import com.google.common.io.Resources;
 import com.thoughtworks.selenium.Selenium;
 import java.io.IOException;
 import java.net.URL;
-import org.junit.AfterClass;
-import org.junit.Before;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+ 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.testng.Assert.assertEquals;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -66,7 +66,7 @@ public class JQueryTest  extends BaseTest {
 
     }
 
-    @Before
+    @BeforeMethod
     public void before() {
     }
 
@@ -86,7 +86,7 @@ public class JQueryTest  extends BaseTest {
         assertEquals("Remove", removeButton.getText());
     }
     
-    @Ignore
+   // @Ignore
     public void testClickBySeleniumObjectCSSSelector()
     {
     
@@ -95,7 +95,7 @@ public class JQueryTest  extends BaseTest {
         selenium.click("css=#users tr:has(td:contains('Frank')) button:contains('Remove')");
     }
     
-    @Ignore
+   // @Ignore
     public void testClickByDirectExecute()
     {
     

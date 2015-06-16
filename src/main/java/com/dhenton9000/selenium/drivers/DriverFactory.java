@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -44,8 +45,49 @@ public class DriverFactory {
      */
     public static enum DRIVER_ENV {
 
-        local, remoteAlpha,phantomjs
+        local, remoteAlpha, phantomjs
     };
+
+    /**
+     * get a driver based on the remote.server System property
+     *
+     * @return
+     * @throws IOException
+     */
+    public WebDriver getDriver() throws IOException {
+        //TODO: use the remote.server property here to configure
+        //the drivers going to driver factory
+        DRIVER_ENV env = null;
+        String envString = System.getProperty("remote.server");
+        if (envString == null) {
+            env = DRIVER_ENV.local;
+        } else {
+            env = DRIVER_ENV.valueOf(envString);
+        }
+
+        return getDriver(env);
+
+    }
+
+    public WebDriver getDriver(DRIVER_ENV env) throws IOException {
+        WebDriver driver = null;
+        switch (env) {
+            case phantomjs:
+                driver = configurePhantomJsDriver();
+                break;
+            case local:
+                driver
+                        = configureDriver(
+                                DriverFactory.DRIVER_TYPES.FireFox, null);
+                driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
+                driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+                break;
+            default:
+
+        }
+
+        return driver;
+    }
 
     /**
      * set up the driver with configuration parameters
@@ -106,10 +148,22 @@ public class DriverFactory {
         }
         return driver;
     }
-    
-    
-     public final WebDriver configurePhantomJsDriver(Configuration sConfig)
+
+    public static Configuration getConfiguration() {
+        Configuration config = null;
+        LOG.debug("using properties file");
+        try {
+            config = new PropertiesConfiguration("env.properties");
+            LOG.debug("reading config in   DriverFactory");
+        } catch (ConfigurationException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+        return config;
+    }
+
+    public final WebDriver configurePhantomJsDriver( )
             throws IOException {
+        Configuration sConfig = getConfiguration();
         DesiredCapabilities sCaps = new DesiredCapabilities();
         sCaps.setJavascriptEnabled(true);
         sCaps.setCapability("takesScreenshot", false);
