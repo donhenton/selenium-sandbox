@@ -40,7 +40,7 @@ public class ScreenShotLauncher {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScreenShotLauncher.class);
     private ConfigurationManager configurationManager = new ConfigurationManager();
-    private DriverFactory driverFactory;
+    private DriverFactory driverFactory = new DriverFactory();
    
 
     public enum ACTIONS {
@@ -134,12 +134,12 @@ public class ScreenShotLauncher {
         switch (actionEnum) {
 
             case source:
-                driver = configureDriver();
+                driver =  driverFactory.getDriver();
                 creator = new ScreenshotRepository(configurationManager, driver);
                 creator.createSourceImages();
                 break;
             case target:
-                driver = configureDriver();
+                driver =  driverFactory.getDriver();
                 creator = new ScreenshotRepository(configurationManager, driver);
                 creator.createTargetImages();
                 break;
@@ -157,19 +157,7 @@ public class ScreenShotLauncher {
 
 
 
-    /**
-     * set up the webdriver
-     *
-     * @return
-     */
-    private WebDriver configureDriver() throws IOException {
-
-         
-            return driverFactory.getDriver();
-        
-
-         
-    }
+     
 
    
 

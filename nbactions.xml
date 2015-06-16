@@ -3,6 +3,7 @@
     
     <action>
             <actionName>CUSTOM-target images</actionName>
+            <displayName>target images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -18,6 +19,7 @@
     
     <action>
             <actionName>CUSTOM-source images</actionName>
+            <displayName>source images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -34,6 +36,7 @@
     
     <action>
             <actionName>CUSTOM-compare images</actionName>
+            <displayName>compare images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -167,8 +170,8 @@
             </activatedProfiles>
         </action>
       <action>
-            <actionName>CUSTOM-RUn TestNg Tests</actionName>
-            <displayName>RUn TestNg Tests</displayName>
+            <actionName>CUSTOM-Run TestNg Tests</actionName>
+            <displayName>Run TestNg Tests</displayName>
             <goals>
                 <goal>clean</goal>
                 <goal>test</goal>
