@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class DriverFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DriverFactory.class);
-
+    public static final String ENV_PROPERTIES_FILENAME = "env.properties";
     /**
      * driver types currently only firefox supported
      */
@@ -153,13 +153,14 @@ public class DriverFactory {
         Configuration config = null;
         LOG.debug("using properties file");
         try {
-            config = new PropertiesConfiguration("env.properties");
+            config = new PropertiesConfiguration(ENV_PROPERTIES_FILENAME);
             LOG.debug("reading config in   DriverFactory");
         } catch (ConfigurationException ex) {
             throw new RuntimeException(ex.getMessage());
         }
         return config;
     }
+    
 
     public final WebDriver configurePhantomJsDriver( )
             throws IOException {

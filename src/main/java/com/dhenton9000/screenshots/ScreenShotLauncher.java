@@ -6,11 +6,10 @@
 package com.dhenton9000.screenshots;
 
 import com.dhenton9000.screenshots.compare.ImageControl;
+import com.dhenton9000.selenium.drivers.DriverFactory;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -20,11 +19,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.configuration.ConfigurationException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +40,7 @@ public class ScreenShotLauncher {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScreenShotLauncher.class);
     private ConfigurationManager configurationManager = new ConfigurationManager();
+    private DriverFactory driverFactory;
    
 
     public enum ACTIONS {
@@ -167,27 +162,13 @@ public class ScreenShotLauncher {
      *
      * @return
      */
-    private WebDriver configureDriver() {
+    private WebDriver configureDriver() throws IOException {
 
-        WebDriver driver = null;
-        LoggingPreferences logs = new LoggingPreferences();
-        logs.enable(LogType.BROWSER, Level.SEVERE);
-        logs.enable(LogType.CLIENT, Level.SEVERE);
-        logs.enable(LogType.DRIVER, Level.SEVERE);
-        logs.enable(LogType.PERFORMANCE, Level.SEVERE);
-        logs.enable(LogType.PROFILER, Level.SEVERE);
-        logs.enable(LogType.SERVER, Level.SEVERE);
+         
+            return driverFactory.getDriver();
+        
 
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-        desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
-        LOG.debug("creating firefox driver");
-        driver = new FirefoxDriver(desiredCapabilities);
-        LOG.debug("got firefox driver");
-
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        LOG.debug("driver is loaded via config " + driver.toString());
-
-        return driver;
+         
     }
 
    

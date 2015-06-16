@@ -7,6 +7,8 @@ package com.dhenton9000.screenshots;
 
 import com.dhenton9000.screenshots.navigator.ScreenShotNavigator;
 import com.dhenton9000.screenshots.navigator.MainPageNavigator;
+import com.dhenton9000.selenium.drivers.DriverFactory;
+import static com.dhenton9000.selenium.drivers.DriverFactory.ENV_PROPERTIES_FILENAME;
 import com.dhenton9000.utils.xml.XMLUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,7 @@ public class ConfigurationManager {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ConfigurationManager.class);
     private List<ScreenShot> screenShotList = new ArrayList<ScreenShot>();
 
-     /**
+    /**
      * Key for which page to navigate to. The navigation will be by code, and
      * this enum value is a descriptive key for each screen shot, this points to
      * code that navigates and sets up the screenshot, eg "mainpage" or
@@ -47,6 +49,7 @@ public class ConfigurationManager {
      *
      */
     public enum PAGE_ACTION {
+
         mainPage
     }
 
@@ -57,7 +60,7 @@ public class ConfigurationManager {
         if (screenShotConfigFileLocation == null) {
             throw new RuntimeException(
                     "Must specify screenshot config location property '"
-                    + SCREENSHOT_CONFIG_PROPERTY + "' in test.properties");
+                    + SCREENSHOT_CONFIG_PROPERTY + "' in " + ENV_PROPERTIES_FILENAME );
         }
 
         try {
@@ -101,7 +104,7 @@ public class ConfigurationManager {
     /**
      * This is where navigation instructions are added. Add to this as new
      * screen shot requests are described. For example, a new case statement
-     * would be added for a screen shot of the customer page, or the billing 
+     * would be added for a screen shot of the customer page, or the billing
      * page
      *
      * A Navigator {@link ScreenShotNavigator} is a piece of code where complete
@@ -122,7 +125,7 @@ public class ConfigurationManager {
             case mainPage:
                 navigator = new MainPageNavigator();
                 break;
- 
+
             default:
                 throw new RuntimeException("unable to find switch for '"
                         + screenShot.getPageAction() + "'");
@@ -137,13 +140,7 @@ public class ConfigurationManager {
      */
     public final Configuration getTestPropertiesConfig() {
         if (testPropertiesConfig == null) {
-
-            try {
-                testPropertiesConfig = new PropertiesConfiguration(appPropertiesKey);
-            } catch (ConfigurationException ex) {
-                throw new RuntimeException("Unable to find test.properties file");
-            }
-
+            testPropertiesConfig = DriverFactory.getConfiguration();
         }
         return testPropertiesConfig;
     }
