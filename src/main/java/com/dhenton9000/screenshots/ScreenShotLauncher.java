@@ -19,6 +19,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.commons.configuration.ConfigurationException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.SessionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,12 +42,11 @@ public class ScreenShotLauncher {
     private static final Logger LOG = LoggerFactory.getLogger(ScreenShotLauncher.class);
     private ConfigurationManager configurationManager = new ConfigurationManager();
     private DriverFactory driverFactory = new DriverFactory();
-   
 
     public enum ACTIONS {
+
         source, target, compare
     };
-   
 
     /**
      * main launching method that takes command line arguments
@@ -130,35 +130,38 @@ public class ScreenShotLauncher {
         LOG.debug("in handle request with action '" + actionEnum.toString() + "'");
         WebDriver driver = null;
         ScreenshotRepository creator = null;
+        try {
+            switch (actionEnum) {
 
-        switch (actionEnum) {
-
-            case source:
-                driver =  driverFactory.getDriver();
-                creator = new ScreenshotRepository(configurationManager, driver);
-                creator.createSourceImages();
-                break;
-            case target:
-                driver =  driverFactory.getDriver();
-                creator = new ScreenshotRepository(configurationManager, driver);
-                creator.createTargetImages();
-                break;
-            case compare:
-                 ImageControl imageControl = 
-                  new ImageControl(configurationManager);
+                case source:
+                    driver = driverFactory.getDriver();
+                    creator = new ScreenshotRepository(configurationManager, driver);
+                    creator.createSourceImages();
+                    break;
+                case target:
+                    driver = driverFactory.getDriver();
+                    creator = new ScreenshotRepository(configurationManager, driver);
+                    creator.createTargetImages();
+                    break;
+                case compare:
+                    ImageControl imageControl
+                            = new ImageControl(configurationManager);
                     imageControl.compareImages();
-                break;
-                
-            default:
-                break;
+                    break;
 
-        };
+                default:
+                    break;
+
+            };
+        } finally {
+            if (driver != null) {
+                try {
+                    driver.close();
+                    driver.quit();
+                } catch (SessionNotFoundException ss) {
+                }
+            }
+        }
     }
-
-
-
-     
-
-   
 
 }

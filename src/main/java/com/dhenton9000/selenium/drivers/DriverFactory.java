@@ -6,11 +6,14 @@
 package com.dhenton9000.selenium.drivers;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
@@ -20,6 +23,7 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +35,7 @@ public class DriverFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DriverFactory.class);
     public static final String ENV_PROPERTIES_FILENAME = "env.properties";
+
     /**
      * driver types currently only firefox supported
      */
@@ -59,7 +64,7 @@ public class DriverFactory {
         //the drivers going to driver factory
         DRIVER_ENV env = null;
         String envString = System.getProperty("remote.server");
-        if (envString == null) {
+        if (StringUtils.isBlank(envString)) {
             env = DRIVER_ENV.local;
         } else {
             env = DRIVER_ENV.valueOf(envString);
@@ -75,6 +80,9 @@ public class DriverFactory {
             case phantomjs:
                 driver = configurePhantomJsDriver();
                 break;
+            case remoteAlpha:
+                driver = configureRemoteAlphaDriver();
+                break;
             case local:
                 driver
                         = configureDriver(
@@ -83,6 +91,8 @@ public class DriverFactory {
                 driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
                 break;
             default:
+                throw new UnsupportedOperationException("driver "
+                        + env.toString() + "not supported yet");
 
         }
 
@@ -122,7 +132,9 @@ public class DriverFactory {
                     firefoxProfile.setPreference("browser.download.folderList", 2);
                     firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
                     firefoxProfile.setPreference("browser.download.dir", tempDownloadPath);
-                    firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/vnd.ms-excel");
+                    firefoxProfile.setPreference(
+                            "browser.helperApps.neverAsk.saveToDisk",
+                            "text/csv,application/vnd.ms-excel");
                 }
                 desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
 
@@ -151,7 +163,7 @@ public class DriverFactory {
 
     public static Configuration getConfiguration() {
         Configuration config = null;
-        LOG.debug("using properties file");
+         
         try {
             config = new PropertiesConfiguration(ENV_PROPERTIES_FILENAME);
             LOG.debug("reading config in   DriverFactory");
@@ -160,14 +172,13 @@ public class DriverFactory {
         }
         return config;
     }
-    
 
-    public final WebDriver configurePhantomJsDriver( )
+    public final WebDriver configurePhantomJsDriver()
             throws IOException {
         Configuration sConfig = getConfiguration();
         DesiredCapabilities sCaps = new DesiredCapabilities();
         sCaps.setJavascriptEnabled(true);
-        sCaps.setCapability("takesScreenshot", false);
+        sCaps.setCapability("takesScreenshot", true);
         if (sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY) != null) {
             sCaps.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY,
                     sConfig.getProperty(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY));
@@ -189,4 +200,36 @@ public class DriverFactory {
         return mDriver;
 
     }
+
+    /**
+     * this if for the docker instance in the docker folder.
+     * 
+     * @return 
+     */
+    private WebDriver configureRemoteAlphaDriver() {
+        WebDriver driver = null;
+        String remoteURL = "http://192.168.59.103:4470/wd/hub";
+        LoggingPreferences logs = new LoggingPreferences();
+        logs.enable(LogType.BROWSER, Level.SEVERE);
+        logs.enable(LogType.CLIENT, Level.SEVERE);
+        logs.enable(LogType.DRIVER, Level.SEVERE);
+        logs.enable(LogType.PERFORMANCE, Level.SEVERE);
+        logs.enable(LogType.PROFILER, Level.SEVERE);
+        logs.enable(LogType.SERVER, Level.SEVERE);
+
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
+        desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+        
+
+        try {
+
+            driver = new RemoteWebDriver(new URL(remoteURL), desiredCapabilities);
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException("Malformed remote url '" + remoteURL + "'");
+        }
+
+        return driver;
+    }
+
 }

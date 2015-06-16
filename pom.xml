@@ -289,6 +289,44 @@
                  
             </build>
         </profile>
+        
+        <profile>
+            <id>alpha</id>
+            <properties>
+                <!-- the src/main/env folder to use -->
+                <test.env>alpha</test.env>
+                
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <!-- this means grab the envar folder content and send to target -->
+                        <directory>src/main/env/${test.env}</directory>
+                        <filtering>true</filtering>
+                        <!-- it is set up for the dep.properties file -->
+                    </resource>
+                </resources>
+                 
+            </build>
+        </profile><profile>
+            <id>beta</id>
+            <properties>
+                <!-- the src/main/env folder to use -->
+                <test.env>beta</test.env>
+                
+            </properties>
+            <build>
+                <resources>
+                    <resource>
+                        <!-- this means grab the envar folder content and send to target -->
+                        <directory>src/main/env/${test.env}</directory>
+                        <filtering>true</filtering>
+                        <!-- it is set up for the dep.properties file -->
+                    </resource>
+                </resources>
+                 
+            </build>
+        </profile>
         <!-- use test ng for testing -->
         <profile>
             <id>testNg</id>
