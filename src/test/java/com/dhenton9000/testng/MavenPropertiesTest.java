@@ -5,6 +5,7 @@
  */
 package com.dhenton9000.testng;
 
+import com.dhenton9000.testng.listeners.TestingListener;
 import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ import org.testng.annotations.Listeners;
  * mvn clean test -PtestNg
  * @author dhenton
  */
-@Listeners({DummyListener.class})
+@Listeners({TestingListener.class})
 public class MavenPropertiesTest implements ITest {
 
     private Logger LOG = LoggerFactory.getLogger(DummyListenerTest.class);

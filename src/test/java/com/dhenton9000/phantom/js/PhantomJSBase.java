@@ -7,7 +7,7 @@ package com.dhenton9000.phantom.js;
 
 import com.dhenton9000.embedded.jetty.JettyServer;
 import com.dhenton9000.selenium.drivers.DriverFactory;
-import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_ENV;
+import com.dhenton9000.selenium.drivers.DriverFactory.REMOTE_SERVER_VALUE;
 import com.dhenton9000.selenium.generic.BaseTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class PhantomJSBase extends BaseTest {
         try {
             //config = new PropertiesConfiguration("env.properties");
             LOG.debug("reading config in " + this.getClass().getName());
-            driver = getDriver(DRIVER_ENV.phantomjs);
+            driver = getDriver(REMOTE_SERVER_VALUE.phantomjs);
 
             this.automation = new GenericAutomationRepository(driver, DriverFactory.getConfiguration());
         } catch ( IOException ex  ) {

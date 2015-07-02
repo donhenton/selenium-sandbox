@@ -10,7 +10,7 @@ package com.dhenton9000.selenium.generic;
  * and open the template in the editor.
  */
 import com.dhenton9000.selenium.drivers.DriverFactory;
-import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_ENV;
+import com.dhenton9000.selenium.drivers.DriverFactory.REMOTE_SERVER_VALUE;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Locatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITest;
 
 /**
  * base class for tests that which to have the driver set via the remote.server
@@ -32,30 +33,34 @@ import org.slf4j.LoggerFactory;
  *
  * @author dhenton
  */
-public class BaseTest {
+public class BaseTest implements ITest {
 
     private final static Logger logger = LoggerFactory.getLogger(BaseTest.class);
     private DriverFactory driverFactory = new DriverFactory();
+    private GenericAutomationRepository automationRepository;
 
-    protected GenericAutomationRepository getAutomationRepository() {
-        WebDriver d = null;
-        try {
-            d = getDriver();
-        } catch (IOException ex) {
-            throw new RuntimeException("io problem in repository creation "
-                    +ex.getMessage());
+    public GenericAutomationRepository getAutomationRepository() {
+        if (automationRepository == null) {
+            WebDriver d = null;
+            try {
+                d = getDriver();
+            } catch (IOException ex) {
+                throw new RuntimeException("io problem in repository creation "
+                        + ex.getMessage());
+
+            }
+            automationRepository = new GenericAutomationRepository(d, DriverFactory.getConfiguration());
+
         }
-        return new GenericAutomationRepository(d, DriverFactory.getConfiguration());
+        return automationRepository;
     }
-    
-    protected WebDriver getDriver() throws IOException
-    {
+
+    protected WebDriver getDriver() throws IOException {
         return driverFactory.getDriver();
     }
-    
-    
-    protected WebDriver getDriver(DRIVER_ENV driver_env) throws IOException {
-         return driverFactory.getDriver(driver_env);
+
+    protected WebDriver getDriver(REMOTE_SERVER_VALUE driver_env) throws IOException {
+        return driverFactory.getDriver(driver_env);
     }
 
     public void mouseOverElement(WebElement element, WebDriver driver) {
@@ -136,5 +141,10 @@ public class BaseTest {
         }
         return framePresent;
 
+    }
+
+    @Override
+    public String getTestName() {
+         return this.getClass().getSimpleName();
     }
 }

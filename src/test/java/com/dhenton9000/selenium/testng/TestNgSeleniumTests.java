@@ -6,7 +6,7 @@
 package com.dhenton9000.selenium.testng;
 
 import com.dhenton9000.embedded.jetty.JettyServer;
-import com.dhenton9000.testng.DummyListener;
+import com.dhenton9000.testng.listeners.TestingListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  *
  * @author dhenton
  */
-@Listeners({DummyListener.class})
+@Listeners({TestingListener.class})
 public class TestNgSeleniumTests   {
 
     private Logger LOG = LoggerFactory.getLogger(TestNgSeleniumTests.class);

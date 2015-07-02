@@ -5,6 +5,7 @@
  */
 package com.dhenton9000.testng;
 
+import com.dhenton9000.testng.listeners.TestingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static org.testng.Assert.assertTrue;
@@ -23,7 +24,7 @@ import org.testng.annotations.Test;
  *
  * @author dhenton
  */
-@Listeners({DummyListener.class})
+@Listeners({TestingListener.class})
 public class DummyListenerTest  {
 
     private Logger LOG = LoggerFactory.getLogger(DummyListenerTest.class);

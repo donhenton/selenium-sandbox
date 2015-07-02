@@ -47,10 +47,11 @@ public class DriverFactory {
     /**
      * local points to a local firefox, chrome instance remoteAlpha would be
      * saucelabs or a docker selenuminum grid/standalone
+     *
      */
-    public static enum DRIVER_ENV {
+    public static enum REMOTE_SERVER_VALUE {
 
-        local, remoteAlpha, phantomjs
+        local, docker, phantomjs
     };
 
     /**
@@ -60,27 +61,54 @@ public class DriverFactory {
      * @throws IOException
      */
     public WebDriver getDriver() throws IOException {
-        //TODO: use the remote.server property here to configure
-        //the drivers going to driver factory
-        DRIVER_ENV env = null;
-        String envString = System.getProperty("remote.server");
-        if (StringUtils.isBlank(envString)) {
-            env = DRIVER_ENV.local;
-        } else {
-            env = DRIVER_ENV.valueOf(envString);
+
+        REMOTE_SERVER_VALUE env = getRemoteServerValue();
+
+        if (env == null) {
+            env = REMOTE_SERVER_VALUE.local;
         }
 
         return getDriver(env);
 
     }
 
-    public WebDriver getDriver(DRIVER_ENV env) throws IOException {
+    /**
+     * the remote server value set at the command line.
+     * 
+     * @return 
+     */
+    public static REMOTE_SERVER_VALUE getRemoteServerValue() {
+        String envString = System.getProperty("remote.server");
+        REMOTE_SERVER_VALUE rValue = null;
+        try {
+            rValue = REMOTE_SERVER_VALUE.valueOf(envString);
+        } catch (Exception err) {
+        }
+
+        return rValue;
+    }
+    /**
+     * this is a value set in maven or at the maven command line.
+     * This is for demo simple items
+     * @return 
+     */
+    public static String getTestENV() {
+        String envString = System.getProperty("test.env");
+        if (StringUtils.isBlank(envString))
+            envString = null;
+        
+        return envString;
+         
+    }
+    
+
+    public WebDriver getDriver(REMOTE_SERVER_VALUE env) throws IOException {
         WebDriver driver = null;
         switch (env) {
             case phantomjs:
                 driver = configurePhantomJsDriver();
                 break;
-            case remoteAlpha:
+            case docker:
                 driver = configureRemoteAlphaDriver();
                 break;
             case local:
@@ -163,7 +191,7 @@ public class DriverFactory {
 
     public static Configuration getConfiguration() {
         Configuration config = null;
-         
+
         try {
             config = new PropertiesConfiguration(ENV_PROPERTIES_FILENAME);
             LOG.debug("reading config in   DriverFactory");
@@ -203,8 +231,8 @@ public class DriverFactory {
 
     /**
      * this if for the docker instance in the docker folder.
-     * 
-     * @return 
+     *
+     * @return
      */
     private WebDriver configureRemoteAlphaDriver() {
         WebDriver driver = null;
@@ -219,7 +247,6 @@ public class DriverFactory {
 
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
         desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
-        
 
         try {
 
