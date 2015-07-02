@@ -4,18 +4,20 @@
  */
 package com.dhenton9000.selenium.sandbox.jquery;
 
+import com.dhenton9000.selenium.generic.BaseTest;
+import java.io.IOException;
 import org.openqa.selenium.interactions.Action;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+//import org.junit.AfterClass;
+//import org.junit.BeforeClass;
+//import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.interactions.Actions;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 // http://selenium.polteq.com/en/perform-a-sequence-of-actions-with-selenium-webdriver
 
@@ -23,17 +25,18 @@ import org.openqa.selenium.interactions.Actions;
  *
  * @author dhenton
  */
-public class DraggableTest {
+public class DraggableTest extends BaseTest {
 
     private static WebDriver driver;
+    
+    public DraggableTest() throws IOException
+    {
+         driver = getDriver();
+    }
 
     @BeforeClass
     public static void setUp() {
-        FirefoxProfile profile = new FirefoxProfile();
-        profile.setEnableNativeEvents(true);
-        driver = new FirefoxDriver(profile);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(5, TimeUnit.SECONDS);
+      
     }
 
     @AfterClass

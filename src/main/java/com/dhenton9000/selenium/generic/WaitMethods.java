@@ -26,6 +26,10 @@ public class WaitMethods {
     public WaitMethods(WebDriver driver) {
         this.driver = driver;
     }
+    
+    
+    public static final int getWaitTime(){ return 10;}
+    
     public void waitForElement(int timeInSeconds) {
 
         driver.manage().timeouts().implicitlyWait(timeInSeconds, java.util.concurrent.TimeUnit.SECONDS);

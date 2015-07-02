@@ -9,29 +9,30 @@ import org.apache.commons.configuration.Configuration;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static com.dhenton9000.selenium.generic.GenericAutomationRepository.*;
 
 /**
- * code for interacting with the appspot application
- * http://donhenton.appspot.com
+ * Code for interacting with google search engine.
+ *
  * @author dhenton
  */
-public class AppspotRepository {
+public class NYTimesRepository {
+
+   
+    private final GenericAutomationRepository automation;
+    private static final Logger LOG = LoggerFactory.getLogger(NYTimesRepository.class);
 
     
-    private GenericAutomationRepository automation;
-    private static final Logger LOG = LoggerFactory.getLogger(AppspotRepository.class);
-
-    public AppspotRepository(GenericAutomationRepository automation) {
+    public NYTimesRepository(GenericAutomationRepository automation) {
 
         
         this.automation = automation;
          
 
     }
-
+     
     
-
+    
+    
     public GenericAutomationRepository getAutomation() {
         return automation;
     }
@@ -42,19 +43,19 @@ public class AppspotRepository {
     public Configuration getConfig() {
         return this.getAutomation().getConfig();
     }
-
+    
+    
     public void initialNavigation() {
 
-        String url = getConfig().getString("test.env.url");
-        LOG.debug("beginning load of browser " + url);
-        if (url == null) {
-            throw new RuntimeException("must specify 'test.env.url' in env.properties");
-        }
+        String url = "http://www.nytimes.com";
+        
         this.getAutomation().getDriver().get(url);
         getAutomation().maximizeWindow();
-        getAutomation().getWaitMethods().waitForExpectedElement(2, SELECTOR_CHOICE.id, "menu");
-        getAutomation().getWaitMethods().waitForDuration(3);
+        getAutomation().getWaitMethods().waitForExpectedElement(2, 
+                GenericAutomationRepository.SELECTOR_CHOICE.id, 
+                "site-index-navigation");
 
     }
+
 
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="Angular Suite" verbose="4">
+  
+   
+    <test name="BaseTest Tests TestNg" parallel="classes" thread-count="1">
+        
+        <packages>
+            <package name="com.dhenton9000.angular"/>
+        </packages>
+    </test>
+    
+</suite>

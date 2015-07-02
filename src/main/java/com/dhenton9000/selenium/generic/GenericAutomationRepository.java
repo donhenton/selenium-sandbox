@@ -11,23 +11,20 @@ package com.dhenton9000.selenium.generic;
  */
 import com.dhenton9000.selenium.wicket.WicketBy;
 import com.dhenton9000.filedownloader.FileDownloader;
+import com.dhenton9000.selenium.drivers.DriverFactory;
+import com.dhenton9000.selenium.drivers.DriverFactory.DRIVER_TYPES;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.commons.configuration.Configuration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.logging.Logs;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.Select;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.html5.LocalStorage;
 
 public class GenericAutomationRepository {
@@ -48,6 +44,8 @@ public class GenericAutomationRepository {
     private LocalStorage localStorage;
     private JSMethods jsMethods;
     private String tempDownloadPath;
+    
+  
 
     /**
      * construct the repository from a config file, which will specify the
@@ -58,8 +56,6 @@ public class GenericAutomationRepository {
     public GenericAutomationRepository(Configuration config) {
         driver = null;
         this.config = config;
-        configureDriver();
-        this.waitMethods = new WaitMethods(driver);
         this.js = (JavascriptExecutor) driver;
         this.jsMethods = new JSMethods(this);
 
@@ -78,8 +74,17 @@ public class GenericAutomationRepository {
         this.js = (JavascriptExecutor) driver;
 
     }
+    
+    public Configuration getConfig()
+    {
+        return this.config;
+    }
 
     public WaitMethods getWaitMethods() {
+        if (this.waitMethods == null)
+        {
+            this.waitMethods =   new WaitMethods(getDriver());
+        }
         return this.waitMethods;
     }
 
@@ -137,13 +142,7 @@ public class GenericAutomationRepository {
         partialLinkText, wicketPathMatch, wicketPathContains
     }
 
-    /**
-     * driver types currently only firefox supported
-     */
-    public enum DRIVER_TYPES {
-
-        FireFox, InternetExplorer, Opera, Safari, Chrome;
-    }
+    
 
     /**
      * set up the driver with configuration parameters
@@ -151,13 +150,7 @@ public class GenericAutomationRepository {
      */
     private void configureDriver() {
 
-        LoggingPreferences logs = new LoggingPreferences();
-        logs.enable(LogType.BROWSER, Level.SEVERE);
-        logs.enable(LogType.CLIENT, Level.SEVERE);
-        logs.enable(LogType.DRIVER, Level.SEVERE);
-        logs.enable(LogType.PERFORMANCE, Level.SEVERE);
-        logs.enable(LogType.PROFILER, Level.SEVERE);
-        logs.enable(LogType.SERVER, Level.SEVERE);
+        
 
         String driverTypeString = this.config.getString("test.selenium.browser");
         if (driverTypeString == null) {
@@ -166,50 +159,22 @@ public class GenericAutomationRepository {
 
         DRIVER_TYPES driverType = DRIVER_TYPES.valueOf(driverTypeString);
         LOG.debug(" found driver type " + driverType.toString());
+        
         if (driverType == null) {
             throw new RuntimeException("cannot find driver type of " + driverTypeString);
         }
-
-        switch (driverType) {
-            case FireFox:
-            default:
-                DesiredCapabilities desiredCapabilities = DesiredCapabilities.firefox();
-                desiredCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
-
-                 // sets the driver to automatically skip download dialog
-                // and save csv,xcel files to a temp directory
-                // that directory is set in the constructor and has a trailing
-                // slash
-                FirefoxProfile firefoxProfile = new FirefoxProfile();
-                firefoxProfile.setPreference("browser.download.folderList", 2);
-                firefoxProfile.setPreference("browser.download.manager.showWhenStarting", false);
-
-                String target = this.getTempDownloadPath();
-                firefoxProfile.setPreference("browser.download.dir", target);
-                firefoxProfile.setPreference("browser.helperApps.neverAsk.saveToDisk", "text/csv,application/vnd.ms-excel");
-
-                desiredCapabilities.setCapability(FirefoxDriver.PROFILE, firefoxProfile);
-
-                LOG.debug("creating firefox driver");
-                driver = new FirefoxDriver(desiredCapabilities);
-                LOG.debug("got firefox driver");
-                break;
-            case InternetExplorer:
-                break;
-            case Opera:
-                break;
-            case Safari:
-                break;
-            case Chrome:
-                break;
-
-        }
+        DriverFactory driverFactory = new DriverFactory();
+        this.driver = driverFactory.configureDriver(driverType, this.getTempDownloadPath()) ;
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         LOG.debug("driver is loaded via config " + driver.toString());
 
     }
 
     public WebDriver getDriver() {
+        if (this.driver == null)
+        {
+            configureDriver();
+        }
         return this.driver;
     }
 

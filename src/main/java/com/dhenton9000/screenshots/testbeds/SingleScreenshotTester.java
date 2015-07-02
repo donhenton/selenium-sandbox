@@ -12,48 +12,44 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 import com.dhenton9000.screenshots.AbstractSingleScreenShot;
+import com.dhenton9000.selenium.drivers.DriverFactory;
 import com.dhenton9000.selenium.generic.AppspotRepository;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.openqa.selenium.WebDriver;
 
 /**
- * Used to take a    single screenshot  
+ * Used to take a single screenshot
  *
  * @author dhenton
  */
 public class SingleScreenshotTester {
 
-    private final static Logger LOG = LoggerFactory.getLogger(SingleScreenshotTester.class);
+    private final static Logger LOG
+            = LoggerFactory.getLogger(SingleScreenshotTester.class);
+    private DriverFactory driverFactory = new DriverFactory();
 
     public static void main(String[] args) {
 
         try {
-            (new SingleScreenshotTester()).doComparison();
+            (new SingleScreenshotTester()).doTestBedNavigation();
         } catch (Exception ex) {
-            LOG.error("error in main " + ex.getMessage());
+            LOG.error("error in main " + ex.getMessage(),ex);
         }
 
     }
 
-    public void doTestBedNavigation() {
-        
-        GenericAutomationRepository g ; 
-        AppspotRepository app;
-         Configuration config = null;
-        LOG.debug("using properties file");
-        try {
-            config = new PropertiesConfiguration("env.properties");
-            LOG.debug("reading config in " + this.getClass().getName());
-        } catch (ConfigurationException ex) {
-            LOG.info("did not find env.properties file");
-        }
+    public void doTestBedNavigation() throws IOException {
 
-        app = new AppspotRepository(config);
+        GenericAutomationRepository g;
+        AppspotRepository app;
+        Configuration config = DriverFactory.getConfiguration();
+        WebDriver driver = driverFactory.getDriver();
+        g = new GenericAutomationRepository(driver, config);
+        app = new AppspotRepository(g);
         g = app.getAutomation();
 
-        AppComparisonScreenShot sample = new AppComparisonScreenShot(g,app);
+        AppComparisonScreenShot sample = new AppComparisonScreenShot(g, app);
 
         sample.takeScreenShot("screenshots/comp/"
                 + AppComparisonScreenShot.SIMPLE_IMAGE_NAME, "qa");

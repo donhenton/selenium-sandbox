@@ -11,20 +11,18 @@ import com.google.common.io.Resources;
 import com.thoughtworks.selenium.Selenium;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
-import org.junit.AfterClass;
-import org.junit.Before;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+ 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static org.testng.Assert.assertEquals;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -36,6 +34,12 @@ public class JQueryTest  extends BaseTest {
     private static JavascriptExecutor js;
     private final static Logger logger = LoggerFactory.getLogger(JQueryTest.class);
     private static WebDriver driver;
+    
+    public JQueryTest() throws IOException
+    {
+        driver = this.getDriver();
+        js = (JavascriptExecutor) driver;
+    }
 
     @BeforeClass
     public static void beforeClass() {
@@ -43,11 +47,8 @@ public class JQueryTest  extends BaseTest {
         //  FirefoxBinary binary = new FirefoxBinary(new File("C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe"));
 
         //  driver = new FirefoxDriver(binary, profile);
-        driver = new FirefoxDriver();
-        driver.manage().timeouts().pageLoadTimeout(15, TimeUnit.SECONDS);
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+        
         driver.get("file:///"+createPathToTestResources(HTML_FILE));
-        js = (JavascriptExecutor) driver;
 
         // load jQuery dynamically
         // this allows selenium to exploit jquery;
@@ -65,7 +66,7 @@ public class JQueryTest  extends BaseTest {
 
     }
 
-    @Before
+    @BeforeMethod
     public void before() {
     }
 
@@ -85,7 +86,7 @@ public class JQueryTest  extends BaseTest {
         assertEquals("Remove", removeButton.getText());
     }
     
-    @Ignore
+   // @Ignore
     public void testClickBySeleniumObjectCSSSelector()
     {
     
@@ -94,7 +95,7 @@ public class JQueryTest  extends BaseTest {
         selenium.click("css=#users tr:has(td:contains('Frank')) button:contains('Remove')");
     }
     
-    @Ignore
+   // @Ignore
     public void testClickByDirectExecute()
     {
     

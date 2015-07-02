@@ -5,16 +5,15 @@
  */
 package com.dhenton9000.selenium.generic;
 
- 
-
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
+import com.dhenton9000.selenium.drivers.DriverFactory;
+import com.dhenton9000.selenium.drivers.DriverFactory.REMOTE_SERVER_VALUE;
 import com.dhenton9000.selenium.wicket.WicketBy;
 import java.io.File;
+import java.io.IOException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.interactions.HasInputDevices;
 import org.openqa.selenium.interactions.Mouse;
@@ -26,14 +25,43 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.Locatable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITest;
 
 /**
+ * base class for tests that which to have the driver set via the remote.server
+ * property of the pom.xml file
  *
  * @author dhenton
  */
-public class BaseTest {
+public class BaseTest implements ITest {
 
-    private final Logger logger = LoggerFactory.getLogger(BaseTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(BaseTest.class);
+    private DriverFactory driverFactory = new DriverFactory();
+    private GenericAutomationRepository automationRepository;
+
+    public GenericAutomationRepository getAutomationRepository() {
+        if (automationRepository == null) {
+            WebDriver d = null;
+            try {
+                d = getDriver();
+            } catch (IOException ex) {
+                throw new RuntimeException("io problem in repository creation "
+                        + ex.getMessage());
+
+            }
+            automationRepository = new GenericAutomationRepository(d, DriverFactory.getConfiguration());
+
+        }
+        return automationRepository;
+    }
+
+    protected WebDriver getDriver() throws IOException {
+        return driverFactory.getDriver();
+    }
+
+    protected WebDriver getDriver(REMOTE_SERVER_VALUE driver_env) throws IOException {
+        return driverFactory.getDriver(driver_env);
+    }
 
     public void mouseOverElement(WebElement element, WebDriver driver) {
 
@@ -43,14 +71,14 @@ public class BaseTest {
 
     }
 
-     public static String createPathToTestResources(String htmlFilename) {
+    public static String createPathToTestResources(String htmlFilename) {
         char sc = File.separatorChar;
         String currentDir = System.getProperty("user.dir");
         String resourcesPath = currentDir + sc + "src" + sc + "test" + sc + "resources";
         String htmlPath = resourcesPath + sc + htmlFilename;
         return htmlPath;
     }
-    
+
     protected boolean isAlertPresent(WebDriver driver) {
         boolean isAlertPresent = true;
         String oldWindow = driver.getWindowHandle();
@@ -113,5 +141,10 @@ public class BaseTest {
         }
         return framePresent;
 
+    }
+
+    @Override
+    public String getTestName() {
+         return this.getClass().getSimpleName();
     }
 }

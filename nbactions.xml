@@ -3,6 +3,7 @@
     
     <action>
             <actionName>CUSTOM-target images</actionName>
+            <displayName>target images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -18,6 +19,7 @@
     
     <action>
             <actionName>CUSTOM-source images</actionName>
+            <displayName>source images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -34,6 +36,7 @@
     
     <action>
             <actionName>CUSTOM-compare images</actionName>
+            <displayName>compare images</displayName>
             <packagings>
                 <packaging>jar</packaging>
             </packagings>
@@ -136,7 +139,50 @@
                 <skipTests>false</skipTests>
             </properties>
         </action>
-         
+    <action>
+            <actionName>CUSTOM-set Env Alpha</actionName>
+            <displayName>set Env Alpha</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+                <test.env>alpha</test.env>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>setEnv</activatedProfile>
+            </activatedProfiles>
+        </action>
+      <action>
+            <actionName>CUSTOM-set Env Beta</actionName>
+            <displayName>set Env Beta</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>install</goal>
+            </goals>
+            <properties>
+                <skipTests>true</skipTests>
+                <test.env>beta</test.env>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>setEnv</activatedProfile>
+            </activatedProfiles>
+        </action>
+      <action>
+            <actionName>CUSTOM-Run TestNg Tests</actionName>
+            <displayName>Run TestNg Tests</displayName>
+            <goals>
+                <goal>clean</goal>
+                <goal>test</goal>
+            </goals>
+            <properties>
+                <testNgFile>testng-sample</testNgFile>
+            </properties>
+            <activatedProfiles>
+                <activatedProfile>testNg</activatedProfile>
+            </activatedProfiles>
+        </action>    
         
         
 </actions>

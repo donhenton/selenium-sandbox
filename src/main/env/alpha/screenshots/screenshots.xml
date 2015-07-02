@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- note that Folders must end in a slash -->
+<screenshot_suite 
+                    userName="user"
+                    password="password"
+                    environment="test"
+                    sourceFolder="screenshots/compsystem/src/" 
+                    compareFolder="screenshots/compsystem/compare/" 
+                    targetFolder="screenshots/compsystem/target/">
+    <screenshot>
+        <pageAction>mainPage</pageAction>
+        <fileDesc>mainPage</fileDesc>
+    </screenshot>
+    
+    
+</screenshot_suite>

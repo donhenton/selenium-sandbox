@@ -1,6 +1,5 @@
 package com.dhenton9000.screenshots;
 
-
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import java.awt.Color;
 import java.awt.Font;
@@ -16,6 +15,7 @@ import javax.imageio.ImageIO;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
@@ -50,22 +50,27 @@ public class ScreenshotRepository {
         this.configurationManager = configManager;
         this.driver = driver;
         genericRepository = new GenericAutomationRepository(driver, this.getConfigurationManager().getTestPropertiesConfig());
-       
-    }
 
-     
+    }
 
     private void createImages(String targetFolder) {
         List<ScreenShot> screenshots = this.getConfigurationManager().getScreenShotList();
-  
-        for (ScreenShot shot : screenshots) {
-            shot.getNavigator().navigate( getGenericRepository());
-            takeDirectScreenshot(targetFolder + shot.getFileDescription() + ScreenShot.IMAGE_EXTENSION);
+        try {
+            for (ScreenShot shot : screenshots) {
+                shot.getNavigator().navigate(getGenericRepository());
+                takeDirectScreenshot(targetFolder + shot.getFileDescription() + ScreenShot.IMAGE_EXTENSION);
 
+            }
+        } catch (WebDriverException err) {
+            String info = String.format("Error '%s' message '%s'",
+                    err.getClass().getName(),err.getMessage());
+            throw new RuntimeException(info);
+            
+        } finally {
+
+            this.getDriver().close();
+            this.getDriver().quit();
         }
-
-        this.getDriver().close();
-        this.getDriver().quit();
     }
 
     /**
@@ -82,8 +87,6 @@ public class ScreenshotRepository {
     public void createTargetImages() {
         createImages(this.getConfigurationManager().getTargetFolder());
     }
-
-   
 
     /**
      * compare the images in the src and target, it locates the images by a file
@@ -109,8 +112,7 @@ public class ScreenshotRepository {
         }
     }
 
-    
-       /**
+    /**
      * actually create the screenshot for a given environment. Prior to calling
      * this, you will have to position the browser at the location you want the
      * shot taken
@@ -133,9 +135,9 @@ public class ScreenshotRepository {
             Graphics2D graphics = image.createGraphics();
             graphics.setColor(new Color(250, 0, 0, 255));
             graphics.setFont(new Font("Courier", Font.BOLD, 15));
-            graphics.drawString(imageEnvironment , 10, 30);
-            
-            ImageIO.write(image, "PNG", new File(fullPathToPngImg+ScreenShot.IMAGE_EXTENSION) );
+            graphics.drawString(imageEnvironment, 10, 30);
+
+            ImageIO.write(image, "PNG", new File(fullPathToPngImg + ScreenShot.IMAGE_EXTENSION));
             stream.close();
 
         } catch (WebDriverException e) {
@@ -154,11 +156,6 @@ public class ScreenshotRepository {
         }
     }
 
-    
-    
-    
-    
-    
     /**
      * @return the driver
      */
@@ -180,8 +177,6 @@ public class ScreenshotRepository {
         return genericRepository;
     }
 
-
-
     /**
      * @return the configurationManager
      */
@@ -189,8 +184,4 @@ public class ScreenshotRepository {
         return configurationManager;
     }
 
-   
-
-   
-    
 }
