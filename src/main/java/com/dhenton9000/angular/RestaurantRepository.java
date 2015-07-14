@@ -35,50 +35,70 @@ public class RestaurantRepository {
     public GenericAutomationRepository getAutomation() {
         return automation;
     }
-    
-    
-    public void navigateToRestaurantApp()
-    {
+
+    public void navigateToRestaurantApp() {
         getAutomation().getDriver()
                 .get("http://donhenton-node.herokuapp.com/restaurant.doc");
-        
+
         this.getAutomation().getWaitMethods()
-            .waitForExpectedElement(WaitMethods.getWaitTime(),
-            GenericAutomationRepository.SELECTOR_CHOICE.cssSelector, 
-            CONTROLLER_SELECTOR);
-        
+                .waitForExpectedElement(WaitMethods.getWaitTime(),
+                        GenericAutomationRepository.SELECTOR_CHOICE.cssSelector,
+                        CONTROLLER_SELECTOR);
+
     }
-    
+
     /**
      * find the current selected restaurant.
-     * 
-     * @return 
+     *
+     * @return
      */
-    public WebElement getSelectedRestaurantName()
-    {
+    public WebElement getSelectedRestaurantName() {
         return this.getAutomation().findElement(
-                GenericAutomationRepository.SELECTOR_CHOICE.cssSelector, 
+                GenericAutomationRepository.SELECTOR_CHOICE.cssSelector,
                 "div.scrollList td.currentUserRow[data-id]");
     }
-    
-    public List<String> getReviewsForCurrentRestaurant()
-    {
+
+    public List<String> getReviewsForCurrentRestaurant() {
         String reviewSelector = "div[ng-controller=\"reviewController\"] "
                 + "table td:nth-of-type(2) span span";
-        List<WebElement> reviewElems = 
-        this.getAutomation().findElements(
-                GenericAutomationRepository.SELECTOR_CHOICE.cssSelector, 
-                reviewSelector);
-        
+        List<WebElement> reviewElems
+                = this.getAutomation().findElements(
+                        GenericAutomationRepository.SELECTOR_CHOICE.cssSelector,
+                        reviewSelector);
+
         ArrayList<String> items = new ArrayList<>();
-        
-        for (WebElement w: reviewElems)
-        {
+
+        for (WebElement w : reviewElems) {
             items.add(w.getText().trim());
         }
-        
+
         return items;
-        
+
     }
-    
+
+    public String[] getRestaurantRowByIdx(int idx) {
+        String[] res = new String[5];
+        String rowSelectorTemplate
+                = "div[ng-controller=\"listRestaurantController\"] "
+                + "table tr:nth-of-type(%d) td";
+
+        String rowSelector = String.format(rowSelectorTemplate, idx);
+        List<WebElement> cellsFound = null;
+        try {
+            cellsFound
+                    = this.getAutomation().findElements(
+                            GenericAutomationRepository.SELECTOR_CHOICE.cssSelector,
+                            rowSelector);
+        } catch (Exception err) {
+        }
+        if (cellsFound.isEmpty()) {
+            return null;
+        }
+
+        for (int j = 0; j < res.length; j++) {
+            res[j] = cellsFound.get(j).getText().trim();
+        }
+
+        return res;
+    }
 }

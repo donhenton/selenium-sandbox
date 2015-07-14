@@ -39,10 +39,11 @@ public class AngularTests extends AngularTestBase {
        
     }
     
-    @Test
+  
+   // @Test
     public void testGetRestaurants()
     {
-        this.setCloseDriver(false);
+        
          RestaurantCollection restaurantCollection = 
             new RestaurantCollection(this.getAutomationRepository());
          LOG.debug("begin load table");
@@ -50,7 +51,6 @@ public class AngularTests extends AngularTestBase {
          LOG.debug("end load table");
          assertEquals(restaurantCollection.getRestaurants().get(0).getName(),"A1 Ocean Cafe #22");
          assertTrue(restaurantCollection.getRestaurants().size()>40);
-         assertEquals(this.getRestaurantRepository().getReviewsForCurrentRestaurant().size(),0);
          restaurantCollection.getRestaurants().get(3).getEditButton().click();
          assertEquals(this.getRestaurantRepository().getReviewsForCurrentRestaurant().size(),2);
         
