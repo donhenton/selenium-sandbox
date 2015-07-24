@@ -136,8 +136,12 @@ public class ScreenshotRepository {
             graphics.setColor(new Color(250, 0, 0, 255));
             graphics.setFont(new Font("Courier", Font.BOLD, 15));
             graphics.drawString(imageEnvironment, 10, 30);
-
-            ImageIO.write(image, "PNG", new File(fullPathToPngImg + ScreenShot.IMAGE_EXTENSION));
+            if (!fullPathToPngImg.contains(ScreenShot.IMAGE_EXTENSION))
+            {
+                fullPathToPngImg= fullPathToPngImg + ScreenShot.IMAGE_EXTENSION;
+            }
+            
+            ImageIO.write(image, "PNG", new File(fullPathToPngImg));
             stream.close();
 
         } catch (WebDriverException e) {

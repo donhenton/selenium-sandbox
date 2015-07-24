@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.screenshots;
+package com.dhenton9000.screenshots.single;
 
+import com.dhenton9000.screenshots.ConfigurationManager;
+import com.dhenton9000.screenshots.ScreenShot;
+import com.dhenton9000.screenshots.ScreenshotRepository;
 import com.dhenton9000.screenshots.compare.CompareResult;
 import com.dhenton9000.screenshots.compare.ImageComparator;
 import com.dhenton9000.selenium.generic.AppspotRepository;
@@ -15,7 +18,7 @@ import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import static com.dhenton9000.screenshots.compare.SingleImageTestComparator.ROOT_FOLDER_LOCATION;
 /**
  * This class will be used for actual junit tests comparing a current screenshot
  * to a stored image generated at a prior time.
@@ -35,20 +38,20 @@ public abstract class AbstractSingleScreenShot {
 
     private final ScreenshotRepository screenshotRepository;
     private final GenericAutomationRepository genericAutomationRepository;
-    private final AppspotRepository appspotRepository  ;
+    private final AppspotRepository appspotRepository;
 
     public abstract void setUpScreenshot();
 
     public abstract void cleanUp();
 
-    public AbstractSingleScreenShot(GenericAutomationRepository g,
-            AppspotRepository app) {
+    public AbstractSingleScreenShot(GenericAutomationRepository g) {
         this.genericAutomationRepository = g;
-        this.appspotRepository  = app;
+        this.appspotRepository = new AppspotRepository(g);
         screenshotRepository = new ScreenshotRepository(
-                configurationManager, 
+                configurationManager,
                 genericAutomationRepository.getDriver());
     }
+
 
     /**
      * this is the routine to call for taking the image and saving it.
@@ -132,8 +135,6 @@ public abstract class AbstractSingleScreenShot {
 
     }
 
-  
-
     private void checkOrCreateDestFolder(String fullPathToImage) {
 
         File f = new File(fullPathToImage).getParentFile();
@@ -174,4 +175,31 @@ public abstract class AbstractSingleScreenShot {
         return appspotRepository;
     }
 
+        public abstract String getSimpleImageName();
+
+//    @Override
+//    public void cleanUp() {
+//        .logout();
+//        this.getGenericAutomationRepository().getDriver().close();
+//    }
+
+    
+    public String fullPathToWriteComparisonResultsFile() {
+        return ROOT_FOLDER_LOCATION+"images/comp_images/"
+                + getSimpleImageName() + "_comparison"+ScreenShot.IMAGE_EXTENSION;
+    }
+
+     
+    public String classPathToGoldFile() {
+        return "/gold_files/appsample/" + getSimpleImageName()
+                + ScreenShot.IMAGE_EXTENSION;
+    }
+
+    
+    public String fullPathToNewImageFilePath() {
+        return  ROOT_FOLDER_LOCATION+"images/newImages/"
+                + getSimpleImageName() + ScreenShot.IMAGE_EXTENSION;
+    }
+    
+    
 }

@@ -3,22 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.screenshots.testbeds;
+package com.dhenton9000.screenshots.single;
 
-import com.dhenton9000.screenshots.AbstractSingleScreenShot;
-import com.dhenton9000.selenium.generic.AppspotRepository;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 
 /**
  *
  * @author dhenton
  */
-public class AppComparisonScreenShot extends AbstractSingleScreenShot {
+public class DemoScreenShot extends AbstractSingleScreenShot {
     
     public static final String SIMPLE_IMAGE_NAME = "appSample";
     
-    public AppComparisonScreenShot(GenericAutomationRepository g, AppspotRepository app) {
-        super(g, app);
+    public DemoScreenShot(GenericAutomationRepository g) {
+        super(g);
     }
     
     @Override
@@ -32,6 +30,11 @@ public class AppComparisonScreenShot extends AbstractSingleScreenShot {
     public void cleanUp() {
          this.getGenericAutomationRepository().getDriver().close();
           this.getGenericAutomationRepository().getDriver().quit();
+    }
+
+    @Override
+    public String getSimpleImageName() {
+       return "donhenton-mainpage";
     }
     
 }

@@ -54,6 +54,11 @@ public class DriverFactory {
         local, docker, phantomjs
     };
 
+    public static enum ENV {
+
+        alpha, beta
+    }
+
     /**
      * get a driver based on the remote.server System property
      *
@@ -74,8 +79,8 @@ public class DriverFactory {
 
     /**
      * the remote server value set at the command line.
-     * 
-     * @return 
+     *
+     * @return
      */
     public static REMOTE_SERVER_VALUE getRemoteServerValue() {
         String envString = System.getProperty("remote.server");
@@ -87,20 +92,44 @@ public class DriverFactory {
 
         return rValue;
     }
+
     /**
-     * this is a value set in maven or at the maven command line.
-     * This is for demo simple items
-     * @return 
+     * this is a value set in maven or at the maven command line. This is for
+     * demo simple items
+     *
+     * @return
      */
-    public static String getTestENV() {
-        String envString = System.getProperty("test.env");
-        if (StringUtils.isBlank(envString))
-            envString = null;
-        
-        return envString;
-         
+    public static String getENVString() {
+        ENV t = getENV();
+        if (t == null) {
+            return null;
+        } else {
+            return t.toString();
+        }
+
     }
-    
+
+    /**
+     * this is a value set in maven or at the maven command line. This is for
+     * demo simple items
+     *
+     * @return
+     */
+    public static ENV getENV() {
+        ENV currentENV = null;
+        String envString = System.getProperty("test.env");
+        if (StringUtils.isBlank(envString)) {
+            currentENV = null;
+        } else {
+            try {
+                currentENV = ENV.valueOf(envString);
+            } catch (Exception err) {
+            }
+        }
+
+        return currentENV;
+
+    }
 
     public WebDriver getDriver(REMOTE_SERVER_VALUE env) throws IOException {
         WebDriver driver = null;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.dhenton9000.screenshots.testbeds;
+package com.dhenton9000.screenshots.single;
 
 import com.dhenton9000.screenshots.ScreenShot;
 import java.io.File;
@@ -11,9 +11,7 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-import com.dhenton9000.screenshots.AbstractSingleScreenShot;
 import com.dhenton9000.selenium.drivers.DriverFactory;
-import com.dhenton9000.selenium.generic.AppspotRepository;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import org.apache.commons.configuration.Configuration;
 import org.openqa.selenium.WebDriver;
@@ -42,17 +40,17 @@ public class SingleScreenshotTester {
     public void doTestBedNavigation() throws IOException {
 
         GenericAutomationRepository g;
-        AppspotRepository app;
+       // AppspotRepository app;
         Configuration config = DriverFactory.getConfiguration();
         WebDriver driver = driverFactory.getDriver();
         g = new GenericAutomationRepository(driver, config);
-        app = new AppspotRepository(g);
-        g = app.getAutomation();
+       // app = new AppspotRepository(g);
+         
 
-        AppComparisonScreenShot sample = new AppComparisonScreenShot(g, app);
+        DemoScreenShot sample = new DemoScreenShot(g);
 
         sample.takeScreenShot("screenshots/comp/"
-                + AppComparisonScreenShot.SIMPLE_IMAGE_NAME, "qa");
+                + DemoScreenShot.SIMPLE_IMAGE_NAME, "qa");
 
     }
 
@@ -61,11 +59,11 @@ public class SingleScreenshotTester {
         File goldFile
                 = FileUtils.toFile(getClass()
                         .getResource("/gold_files/appsample/"
-                                + AppComparisonScreenShot.SIMPLE_IMAGE_NAME
+                                + DemoScreenShot.SIMPLE_IMAGE_NAME
                                 + ScreenShot.IMAGE_EXTENSION));
 
         File compareFile = new File("screenshots/comp/"
-                + AppComparisonScreenShot.SIMPLE_IMAGE_NAME
+                + DemoScreenShot.SIMPLE_IMAGE_NAME
                 + ScreenShot.IMAGE_EXTENSION);
 
         String destFileString = "screenshots/comp/comp.png";

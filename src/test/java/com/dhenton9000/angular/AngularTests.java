@@ -60,7 +60,7 @@ public class AngularTests extends AngularTestBase {
     public void testFromMaven()
     {
         assertNotNull(DriverFactory.getRemoteServerValue());
-        assertEquals(DriverFactory.getTestENV(),"alpha");
+        assertEquals(DriverFactory.getENVString(),"alpha");
     }
     
 }

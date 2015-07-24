@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Image Viewer</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" type="text/css"/>
+        <script src="json/testimage_metadata.js" type="text/javascript"></script>
+        <script src="js/json3.js" type="text/javascript"></script>
+        <script src="js/jquery.js" type="text/javascript"></script>
+        <script src="bootstrap/js/bootstrap.js" type="text/javascript"></script>
+        <script src="testCompare.js" type="text/javascript"></script>
+         
+         <script>
+            $(document).ready(function () {
+                setUpViewer();
+
+            });
+        </script>  
+        
+    </head>
+    <body>
+        
+
+        <div class="container">
+            
+            <h3>Screenshot  <span id="typeText"></span></h3>
+            <h5><span  id="runDate"></span> <span id="imageDescription"></span></h5>
+            <img id="viewImage"></img>
+            
+        </div>
+    </body>
+</html>
