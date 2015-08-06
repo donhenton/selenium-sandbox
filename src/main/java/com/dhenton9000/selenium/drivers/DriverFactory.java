@@ -56,7 +56,7 @@ public class DriverFactory {
 
     public static enum ENV {
 
-        alpha, beta
+        alpha, beta,dev,prod
     }
 
     /**
