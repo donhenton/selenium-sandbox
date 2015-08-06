@@ -35,6 +35,7 @@ public class DriverFactory {
 
     private static final Logger LOG = LoggerFactory.getLogger(DriverFactory.class);
     public static final String ENV_PROPERTIES_FILENAME = "env.properties";
+    public static final String DOCKER_SELENIUM_URL_PROPERTY = "docker.selenium.url";
 
     /**
      * driver types currently only firefox supported
@@ -265,7 +266,14 @@ public class DriverFactory {
      */
     private WebDriver configureRemoteAlphaDriver() {
         WebDriver driver = null;
-        String remoteURL = "http://192.168.59.103:4470/wd/hub";
+        Configuration config = getConfiguration();
+        String remoteURL = config.getString(DOCKER_SELENIUM_URL_PROPERTY,null);
+        if (remoteURL == null)
+        {
+            throw new RuntimeException("you must set "+
+                    DOCKER_SELENIUM_URL_PROPERTY + " in your "
+            + ENV_PROPERTIES_FILENAME+" file");
+        }
         LoggingPreferences logs = new LoggingPreferences();
         logs.enable(LogType.BROWSER, Level.SEVERE);
         logs.enable(LogType.CLIENT, Level.SEVERE);
