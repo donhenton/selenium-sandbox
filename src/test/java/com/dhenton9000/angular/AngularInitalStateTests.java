@@ -71,7 +71,7 @@ public class AngularInitalStateTests extends AngularTestBase {
 
         String[] res= 
         this.getRestaurantRepository().getRestaurantRowByIdx(idx);
-        assertEquals(res[0],"Arby's Roast Beef Restaurant");
+        assertEquals(res[0],"Angies Angle Inn Eatery");
 
     }
 

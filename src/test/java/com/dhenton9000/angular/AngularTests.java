@@ -56,6 +56,9 @@ public class AngularTests extends AngularTestBase {
         
     }
     
+    /**
+     * these properties are set via maven
+     */
     @Test
     public void testFromMaven()
     {

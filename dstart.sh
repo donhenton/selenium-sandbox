@@ -1,0 +1,1 @@
+docker run --rm -p4470:4444 selenium/standalone-firefox:2.48.2

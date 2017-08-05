@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jetty.version>9.3.0.M1</jetty.version>
         <maven.jetty.port>8090</maven.jetty.port>
-        <selenium.version>2.45.0</selenium.version>
+        <selenium.version>2.48.2</selenium.version>
         <test.env>beta</test.env>
     </properties>
     <dependencies>
@@ -339,7 +339,7 @@
                 <!-- the src/main/env folder to use -->
                 <test.env>alpha</test.env>
                 <!-- which driver to use eg local, remote, saucelabs -->
-                <remote.server>local</remote.server>
+                <remote.server>docker</remote.server>
                 <!-- the test ng file to use  can be used to parameterize the call-->
                 <testNgFile>you-must-name-your-testNgFile</testNgFile>
             </properties>
