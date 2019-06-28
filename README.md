@@ -29,7 +29,7 @@ This illustrates:
 4. Use communicating info from maven to running tests (see AngularTests#testFromMaven)
 5. A screenshot of the state for failed tests is also generated.
 
-## Update (8/3/2017) 
+## Update (6/28/2019) 
 
 docker run -d -p 4470:4444 --shm-size 2g selenium/standalone-firefox:3.141.59-radium
 refers to the ip of your docker-toolbox vm (docker-machine ip to find it) if you
