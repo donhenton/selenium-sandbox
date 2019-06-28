@@ -1,1 +1,1 @@
-docker run --rm -p4470:4444 selenium/standalone-firefox:2.48.2
+docker run -d -p 4470:4444 --shm-size 2g selenium/standalone-firefox:3.141.59-radium
