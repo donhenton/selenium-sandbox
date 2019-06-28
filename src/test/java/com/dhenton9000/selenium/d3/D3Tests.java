@@ -6,7 +6,6 @@
 package com.dhenton9000.selenium.d3;
 
 import com.dhenton9000.embedded.jetty.JettyServer;
-import com.dhenton9000.embedded.jetty.ServerTest;
 import com.dhenton9000.selenium.generic.GenericAutomationRepository;
 import com.dhenton9000.selenium.generic.AppspotTestBase;
 import static org.junit.Assert.*;
@@ -20,7 +19,6 @@ import com.dhenton9000.selenium.generic.JSMethods.ElementDimension;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.openqa.selenium.NoSuchElementException;
 
 /**
