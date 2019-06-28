@@ -69,6 +69,7 @@ public class DriverFactory {
     public WebDriver getDriver() throws IOException {
 
         REMOTE_SERVER_VALUE env = getRemoteServerValue();
+        LOG.info("remote driver is "+env.toString());
 
         if (env == null) {
             env = REMOTE_SERVER_VALUE.local;
@@ -268,6 +269,7 @@ public class DriverFactory {
         WebDriver driver = null;
         Configuration config = getConfiguration();
         String remoteURL = config.getString(DOCKER_SELENIUM_URL_PROPERTY,null);
+        LOG.info("docker remote URL "+remoteURL);
         if (remoteURL == null)
         {
             throw new RuntimeException("you must set "+
