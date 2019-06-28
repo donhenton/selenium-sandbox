@@ -32,8 +32,6 @@ This illustrates:
 ## Update (6/28/2019) 
 
 docker run -d -p 4470:4444 --shm-size 2g selenium/standalone-firefox:3.141.59-radium
-refers to the ip of your docker-toolbox vm (docker-machine ip to find it) if you
-
 
 use the dstart.sh script to launch the docker container
 
